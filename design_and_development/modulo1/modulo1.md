@@ -66,8 +66,8 @@ Hay varios ejemplos de tokens, del más sencillo que permite solamente transferi
 He ido pegando cada uno de ellos en Remix y posteriormente haciendo el Deploy en nuestra blockchain local de Ganache que tenemos conectada con Metamask.
 Comentar que uno de los avisos de warning que nos salen es el de cambiar la función contructor de "function <contract_name>" a "constructor", ya que lo hace más seguro por si cometiéramos un bug de typo que fuera catastrófico.
 Con el modelo avanzado he hecho un deploy de un nuevo token, llamado "Mortadelo", con símbolo MRTD y un supply de 1000. A continuación he hecho algunas transferencias utilizando las funciones disponibles del contrato en Remix. En concreto el envío de 2 MRTD a otra de las cuentras disponibles en nuestra blockchain.
-![alt text](https://github.com/rggentil/dise-o_y_desarrollo/blob/master/remix_token.png "Remix example")
-![alt text](https://github.com/rggentil/dise-o_y_desarrollo/blob/master/metamask_token.png "Metamask example")
+![alt text](img/remix_token.png "Remix example")
+![alt text](img/metamask_token.png "Metamask example")
 
 ### Crowdsale
 Para este caso he copiado el código y he hecho el deploy con un token creado anteriormente, que es la dirección que pongo en addressOfTokenUsedAsReward.
@@ -76,7 +76,7 @@ Una vez que se ha terminado el deadline al querer hacer el safe withdrawal para 
 Conclusión que se me han perido unos Ethers en mi blockchain.
 
 ### DAO
-He hecho el deploy del Congress pero no he hehco mucho más ya que no sabía como hacer lo de watch contract con Remix. Además el nivel de este smartcontract lo he visto ya un poco más complicado de poder seguirlo.
+He hecho el deploy del Congress pero no he hecho mucho más ya que no sabía como hacer lo de watch contract con Remix. Además el nivel de este smartcontract lo he visto ya un poco más complicado de poder seguirlo.
 Aún así he ido añadiendo members al contrato para luego consultarlos.
 
 
@@ -112,9 +112,11 @@ Writing artifacts to ./build/contracts
 
 Nos salen algunos warnings pero los vamos a obviar porque sabemos el código funciona del anterior apartado con Remix.
 
+El código de los contratos se encuentra en [contracts](contracts/)
+
 Configuramos en truffle.js el puerto de ganache-cli, el 8545, y pasamos a hacer el deploy de los contratos mediante truffle migration. Para ello antes tenemos que crear otros dos ficheros de migración, uno para el contract del token a crear y a continuación el del Crowdsale. Hacemos la migración primero de el del token porque necesitaremos el address de este contract para añadirlo en el deploy del corwdsale. Estos dos dicheros los podemos encontrar en:
-https://github.com/rggentil/dise-o_y_desarrollo/modulo1/2_next_migration.js
-https://github.com/rggentil/dise-o_y_desarrollo/modulo1/3_next_migration.js
+- [2_next_migration.js](migrations/2_next_migration.js)
+- [3_next_migration.js](migrations/3_next_migration.js)
 
 Hacemos la migración a nuestra blockchain local:
 
