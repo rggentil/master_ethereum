@@ -12,7 +12,7 @@ En todos los apartados utilizamos la opción de optimización `--optimize`.
 
 ## Códigos de operación del smartcontrat
 
-Vamos a trabajar con el contrato que usamos en el anteior módulo de [MyToken.sol](../../modulo1/contracts/MyToken.sol) ya que es más sencillo y así las salidas no son tan grandes y nos sirve para ver los opcodes.
+Vamos a trabajar con el contrato que usamos en el anteior módulo de [MyToken.sol](contracts/MyToken.sol) ya que es más sencillo y así las salidas no son tan grandes y nos sirve para ver los opcodes.
 
 Para obtener dichos códigos tenemos que lanzar el compilador con la opción `--opcodes`:
 
@@ -26,7 +26,7 @@ PUSH1 0x80 PUSH1 0x40 MSTORE CALLVALUE DUP1 ISZERO PUSH2 0x10 JUMPI PUSH1 0x0 DU
 
 ## Identificadores de las funciones
 
-Entiendo que lo que se refiere con identificadores de las funciones son los hashes que las identifican. Por tanto para obtener sus identificadores tenemos que user la opción `--hashes`. Para este ejemplo utilizamos el contrato [TokenERC20.sol](../../modulo1/contracts/TokenERC20.sol) que tiene más funciones:
+Entiendo que lo que se refiere con identificadores de las funciones son los hashes que las identifican. Por tanto para obtener sus identificadores tenemos que user la opción `--hashes`. Para este ejemplo utilizamos el contrato [TokenERC20.sol](contracts/TokenERC20.sol) que tiene más funciones:
 
 ```bash
 rggentil@elcid:~/Documents/master_ethereum/master_ethereum/design_and_development/modulo2/ejercicio3-solidity_compiler$ solc --optimize --hashes contracts/TokenERC20.sol 

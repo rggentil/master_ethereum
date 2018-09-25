@@ -18,7 +18,7 @@ Lo primero, tenemos que configurar nuestro fichero de inicialización json de nu
 - gasLimit: el límite de gas, que también lo dejo por defecto.
 - el resto de parámetros los he dejado tal como venían ya que no parece que sean demasiado importantes para una blockchain privada.
 
-El fichero de init se encuentra en [init.json](my-own-blockchain/init.json) y lo mostramos a continuación:
+El fichero de init se encuentra en [init.json](init.json) y lo mostramos a continuación:
 
 ```json
 {
