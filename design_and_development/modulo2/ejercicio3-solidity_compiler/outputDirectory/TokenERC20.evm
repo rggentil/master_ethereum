@@ -1,0 +1,2931 @@
+    /* "contracts/TokenERC20.sol":156:6091  contract TokenERC20 {... */
+  mstore(0x40, 0x80)
+    /* "contracts/TokenERC20.sol":293:295  18 */
+  0x12
+    /* "contracts/TokenERC20.sol":269:295  uint8 public decimals = 18 */
+  0x2
+  exp(0x100, 0x0)
+  dup2
+  sload
+  dup2
+  0xff
+  mul
+  not
+  and
+  swap1
+  dup4
+  0xff
+  and
+  mul
+  or
+  swap1
+  sstore
+  pop
+    /* "contracts/TokenERC20.sol":1149:1672  constructor(... */
+  callvalue
+    /* "--CODEGEN--":8:17   */
+  dup1
+    /* "--CODEGEN--":5:7   */
+  iszero
+  tag_1
+  jumpi
+    /* "--CODEGEN--":30:31   */
+  0x0
+    /* "--CODEGEN--":27:28   */
+  dup1
+    /* "--CODEGEN--":20:32   */
+  revert
+    /* "--CODEGEN--":5:7   */
+tag_1:
+    /* "contracts/TokenERC20.sol":1149:1672  constructor(... */
+  pop
+  mload(0x40)
+  sub(codesize, bytecodeSize)
+  dup1
+  bytecodeSize
+  dup4
+  codecopy
+  dup2
+  add
+  dup1
+  0x40
+  mstore
+  dup2
+  add
+  swap1
+  dup1
+  dup1
+  mload
+  swap1
+  0x20
+  add
+  swap1
+  swap3
+  swap2
+  swap1
+  dup1
+  mload
+  dup3
+  add
+  swap3
+  swap2
+  swap1
+  0x20
+  add
+  dup1
+  mload
+  dup3
+  add
+  swap3
+  swap2
+  swap1
+  pop
+  pop
+  pop
+    /* "contracts/TokenERC20.sol":1313:1321  decimals */
+  0x2
+  0x0
+  swap1
+  sload
+  swap1
+  0x100
+  exp
+  swap1
+  div
+  0xff
+  and
+    /* "contracts/TokenERC20.sol":1305:1322  uint256(decimals) */
+  0xff
+  and
+    /* "contracts/TokenERC20.sol":1299:1301  10 */
+  0xa
+    /* "contracts/TokenERC20.sol":1299:1322  10 ** uint256(decimals) */
+  exp
+    /* "contracts/TokenERC20.sol":1283:1296  initialSupply */
+  dup4
+    /* "contracts/TokenERC20.sol":1283:1322  initialSupply * 10 ** uint256(decimals) */
+  mul
+    /* "contracts/TokenERC20.sol":1269:1280  totalSupply */
+  0x3
+    /* "contracts/TokenERC20.sol":1269:1322  totalSupply = initialSupply * 10 ** uint256(decimals) */
+  dup2
+  swap1
+  sstore
+  pop
+    /* "contracts/TokenERC20.sol":1404:1415  totalSupply */
+  sload(0x3)
+    /* "contracts/TokenERC20.sol":1380:1389  balanceOf */
+  0x4
+    /* "contracts/TokenERC20.sol":1380:1401  balanceOf[msg.sender] */
+  0x0
+    /* "contracts/TokenERC20.sol":1390:1400  msg.sender */
+  caller
+    /* "contracts/TokenERC20.sol":1380:1401  balanceOf[msg.sender] */
+  0xffffffffffffffffffffffffffffffffffffffff
+  and
+  0xffffffffffffffffffffffffffffffffffffffff
+  and
+  dup2
+  mstore
+  0x20
+  add
+  swap1
+  dup2
+  mstore
+  0x20
+  add
+  0x0
+  keccak256
+    /* "contracts/TokenERC20.sol":1380:1415  balanceOf[msg.sender] = totalSupply */
+  dup2
+  swap1
+  sstore
+  pop
+    /* "contracts/TokenERC20.sol":1486:1495  tokenName */
+  dup2
+    /* "contracts/TokenERC20.sol":1479:1483  name */
+  0x0
+    /* "contracts/TokenERC20.sol":1479:1495  name = tokenName */
+  swap1
+  dup1
+  mload
+  swap1
+  0x20
+  add
+  swap1
+  tag_4
+  swap3
+  swap2
+  swap1
+  jump	// in(tag_5)
+tag_4:
+  pop
+    /* "contracts/TokenERC20.sol":1585:1596  tokenSymbol */
+  dup1
+    /* "contracts/TokenERC20.sol":1576:1582  symbol */
+  0x1
+    /* "contracts/TokenERC20.sol":1576:1596  symbol = tokenSymbol */
+  swap1
+  dup1
+  mload
+  swap1
+  0x20
+  add
+  swap1
+  tag_6
+  swap3
+  swap2
+  swap1
+  jump	// in(tag_5)
+tag_6:
+  pop
+    /* "contracts/TokenERC20.sol":1149:1672  constructor(... */
+  pop
+  pop
+  pop
+    /* "contracts/TokenERC20.sol":156:6091  contract TokenERC20 {... */
+  jump(tag_7)
+tag_5:
+  dup3
+  dup1
+  sload
+  0x1
+  dup2
+  0x1
+  and
+  iszero
+  0x100
+  mul
+  sub
+  and
+  0x2
+  swap1
+  div
+  swap1
+  0x0
+  mstore
+  keccak256(0x0, 0x20)
+  swap1
+  0x1f
+  add
+  0x20
+  swap1
+  div
+  dup2
+  add
+  swap3
+  dup3
+  0x1f
+  lt
+  tag_9
+  jumpi
+  dup1
+  mload
+  not(0xff)
+  and
+  dup4
+  dup1
+  add
+  or
+  dup6
+  sstore
+  jump(tag_8)
+tag_9:
+  dup3
+  dup1
+  add
+  0x1
+  add
+  dup6
+  sstore
+  dup3
+  iszero
+  tag_8
+  jumpi
+  swap2
+  dup3
+  add
+tag_10:
+  dup3
+  dup2
+  gt
+  iszero
+  tag_11
+  jumpi
+  dup3
+  mload
+  dup3
+  sstore
+  swap2
+  0x20
+  add
+  swap2
+  swap1
+  0x1
+  add
+  swap1
+  jump(tag_10)
+tag_11:
+tag_8:
+  pop
+  swap1
+  pop
+  tag_12
+  swap2
+  swap1
+  jump	// in(tag_13)
+tag_12:
+  pop
+  swap1
+  jump	// out
+tag_13:
+  tag_14
+  swap2
+  swap1
+tag_15:
+  dup1
+  dup3
+  gt
+  iszero
+  tag_16
+  jumpi
+  0x0
+  dup2
+  0x0
+  swap1
+  sstore
+  pop
+  0x1
+  add
+  jump(tag_15)
+tag_16:
+  pop
+  swap1
+  jump
+tag_14:
+  swap1
+  jump	// out
+tag_7:
+  dataSize(sub_0)
+  dup1
+  dataOffset(sub_0)
+  0x0
+  codecopy
+  0x0
+  return
+stop
+
+sub_0: assembly {
+        /* "contracts/TokenERC20.sol":156:6091  contract TokenERC20 {... */
+      mstore(0x40, 0x80)
+      jumpi(tag_1, lt(calldatasize, 0x4))
+      calldataload(0x0)
+      0x100000000000000000000000000000000000000000000000000000000
+      swap1
+      div
+      0xffffffff
+      and
+      dup1
+      0x6fdde03
+      eq
+      tag_2
+      jumpi
+      dup1
+      0x95ea7b3
+      eq
+      tag_3
+      jumpi
+      dup1
+      0x18160ddd
+      eq
+      tag_4
+      jumpi
+      dup1
+      0x23b872dd
+      eq
+      tag_5
+      jumpi
+      dup1
+      0x313ce567
+      eq
+      tag_6
+      jumpi
+      dup1
+      0x42966c68
+      eq
+      tag_7
+      jumpi
+      dup1
+      0x70a08231
+      eq
+      tag_8
+      jumpi
+      dup1
+      0x79cc6790
+      eq
+      tag_9
+      jumpi
+      dup1
+      0x95d89b41
+      eq
+      tag_10
+      jumpi
+      dup1
+      0xa9059cbb
+      eq
+      tag_11
+      jumpi
+      dup1
+      0xcae9ca51
+      eq
+      tag_12
+      jumpi
+      dup1
+      0xdd62ed3e
+      eq
+      tag_13
+      jumpi
+    tag_1:
+      0x0
+      dup1
+      revert
+        /* "contracts/TokenERC20.sol":219:237  string public name */
+    tag_2:
+      callvalue
+        /* "--CODEGEN--":8:17   */
+      dup1
+        /* "--CODEGEN--":5:7   */
+      iszero
+      tag_14
+      jumpi
+        /* "--CODEGEN--":30:31   */
+      0x0
+        /* "--CODEGEN--":27:28   */
+      dup1
+        /* "--CODEGEN--":20:32   */
+      revert
+        /* "--CODEGEN--":5:7   */
+    tag_14:
+        /* "contracts/TokenERC20.sol":219:237  string public name */
+      pop
+      tag_15
+      jump(tag_16)
+    tag_15:
+      mload(0x40)
+      dup1
+      dup1
+      0x20
+      add
+      dup3
+      dup2
+      sub
+      dup3
+      mstore
+      dup4
+      dup2
+      dup2
+      mload
+      dup2
+      mstore
+      0x20
+      add
+      swap2
+      pop
+      dup1
+      mload
+      swap1
+      0x20
+      add
+      swap1
+      dup1
+      dup4
+      dup4
+        /* "--CODEGEN--":23:24   */
+      0x0
+        /* "--CODEGEN--":8:108   */
+    tag_17:
+        /* "--CODEGEN--":33:36   */
+      dup4
+        /* "--CODEGEN--":30:31   */
+      dup2
+        /* "--CODEGEN--":27:37   */
+      lt
+        /* "--CODEGEN--":8:108   */
+      iszero
+      tag_18
+      jumpi
+        /* "--CODEGEN--":99:100   */
+      dup1
+        /* "--CODEGEN--":94:97   */
+      dup3
+        /* "--CODEGEN--":90:101   */
+      add
+        /* "--CODEGEN--":84:102   */
+      mload
+        /* "--CODEGEN--":80:81   */
+      dup2
+        /* "--CODEGEN--":75:78   */
+      dup5
+        /* "--CODEGEN--":71:82   */
+      add
+        /* "--CODEGEN--":64:103   */
+      mstore
+        /* "--CODEGEN--":52:54   */
+      0x20
+        /* "--CODEGEN--":49:50   */
+      dup2
+        /* "--CODEGEN--":45:55   */
+      add
+        /* "--CODEGEN--":40:55   */
+      swap1
+      pop
+        /* "--CODEGEN--":8:108   */
+      jump(tag_17)
+    tag_18:
+        /* "--CODEGEN--":12:26   */
+      pop
+        /* "contracts/TokenERC20.sol":219:237  string public name */
+      pop
+      pop
+      pop
+      swap1
+      pop
+      swap1
+      dup2
+      add
+      swap1
+      0x1f
+      and
+      dup1
+      iszero
+      tag_20
+      jumpi
+      dup1
+      dup3
+      sub
+      dup1
+      mload
+      0x1
+      dup4
+      0x20
+      sub
+      0x100
+      exp
+      sub
+      not
+      and
+      dup2
+      mstore
+      0x20
+      add
+      swap2
+      pop
+    tag_20:
+      pop
+      swap3
+      pop
+      pop
+      pop
+      mload(0x40)
+      dup1
+      swap2
+      sub
+      swap1
+      return
+        /* "contracts/TokenERC20.sol":3752:3972  function approve(address _spender, uint256 _value) public... */
+    tag_3:
+      callvalue
+        /* "--CODEGEN--":8:17   */
+      dup1
+        /* "--CODEGEN--":5:7   */
+      iszero
+      tag_21
+      jumpi
+        /* "--CODEGEN--":30:31   */
+      0x0
+        /* "--CODEGEN--":27:28   */
+      dup1
+        /* "--CODEGEN--":20:32   */
+      revert
+        /* "--CODEGEN--":5:7   */
+    tag_21:
+        /* "contracts/TokenERC20.sol":3752:3972  function approve(address _spender, uint256 _value) public... */
+      pop
+      tag_22
+      0x4
+      dup1
+      calldatasize
+      sub
+      dup2
+      add
+      swap1
+      dup1
+      dup1
+      calldataload
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      swap1
+      0x20
+      add
+      swap1
+      swap3
+      swap2
+      swap1
+      dup1
+      calldataload
+      swap1
+      0x20
+      add
+      swap1
+      swap3
+      swap2
+      swap1
+      pop
+      pop
+      pop
+      jump(tag_23)
+    tag_22:
+      mload(0x40)
+      dup1
+      dup3
+      iszero
+      iszero
+      iszero
+      iszero
+      dup2
+      mstore
+      0x20
+      add
+      swap2
+      pop
+      pop
+      mload(0x40)
+      dup1
+      swap2
+      sub
+      swap1
+      return
+        /* "contracts/TokenERC20.sol":373:399  uint256 public totalSupply */
+    tag_4:
+      callvalue
+        /* "--CODEGEN--":8:17   */
+      dup1
+        /* "--CODEGEN--":5:7   */
+      iszero
+      tag_24
+      jumpi
+        /* "--CODEGEN--":30:31   */
+      0x0
+        /* "--CODEGEN--":27:28   */
+      dup1
+        /* "--CODEGEN--":20:32   */
+      revert
+        /* "--CODEGEN--":5:7   */
+    tag_24:
+        /* "contracts/TokenERC20.sol":373:399  uint256 public totalSupply */
+      pop
+      tag_25
+      jump(tag_26)
+    tag_25:
+      mload(0x40)
+      dup1
+      dup3
+      dup2
+      mstore
+      0x20
+      add
+      swap2
+      pop
+      pop
+      mload(0x40)
+      dup1
+      swap2
+      sub
+      swap1
+      return
+        /* "contracts/TokenERC20.sol":3202:3493  function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {... */
+    tag_5:
+      callvalue
+        /* "--CODEGEN--":8:17   */
+      dup1
+        /* "--CODEGEN--":5:7   */
+      iszero
+      tag_27
+      jumpi
+        /* "--CODEGEN--":30:31   */
+      0x0
+        /* "--CODEGEN--":27:28   */
+      dup1
+        /* "--CODEGEN--":20:32   */
+      revert
+        /* "--CODEGEN--":5:7   */
+    tag_27:
+        /* "contracts/TokenERC20.sol":3202:3493  function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {... */
+      pop
+      tag_28
+      0x4
+      dup1
+      calldatasize
+      sub
+      dup2
+      add
+      swap1
+      dup1
+      dup1
+      calldataload
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      swap1
+      0x20
+      add
+      swap1
+      swap3
+      swap2
+      swap1
+      dup1
+      calldataload
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      swap1
+      0x20
+      add
+      swap1
+      swap3
+      swap2
+      swap1
+      dup1
+      calldataload
+      swap1
+      0x20
+      add
+      swap1
+      swap3
+      swap2
+      swap1
+      pop
+      pop
+      pop
+      jump(tag_29)
+    tag_28:
+      mload(0x40)
+      dup1
+      dup3
+      iszero
+      iszero
+      iszero
+      iszero
+      dup2
+      mstore
+      0x20
+      add
+      swap2
+      pop
+      pop
+      mload(0x40)
+      dup1
+      swap2
+      sub
+      swap1
+      return
+        /* "contracts/TokenERC20.sol":269:295  uint8 public decimals = 18 */
+    tag_6:
+      callvalue
+        /* "--CODEGEN--":8:17   */
+      dup1
+        /* "--CODEGEN--":5:7   */
+      iszero
+      tag_30
+      jumpi
+        /* "--CODEGEN--":30:31   */
+      0x0
+        /* "--CODEGEN--":27:28   */
+      dup1
+        /* "--CODEGEN--":20:32   */
+      revert
+        /* "--CODEGEN--":5:7   */
+    tag_30:
+        /* "contracts/TokenERC20.sol":269:295  uint8 public decimals = 18 */
+      pop
+      tag_31
+      jump(tag_32)
+    tag_31:
+      mload(0x40)
+      dup1
+      dup3
+      0xff
+      and
+      0xff
+      and
+      dup2
+      mstore
+      0x20
+      add
+      swap2
+      pop
+      pop
+      mload(0x40)
+      dup1
+      swap2
+      sub
+      swap1
+      return
+        /* "contracts/TokenERC20.sol":4865:5233  function burn(uint256 _value) public returns (bool success) {... */
+    tag_7:
+      callvalue
+        /* "--CODEGEN--":8:17   */
+      dup1
+        /* "--CODEGEN--":5:7   */
+      iszero
+      tag_33
+      jumpi
+        /* "--CODEGEN--":30:31   */
+      0x0
+        /* "--CODEGEN--":27:28   */
+      dup1
+        /* "--CODEGEN--":20:32   */
+      revert
+        /* "--CODEGEN--":5:7   */
+    tag_33:
+        /* "contracts/TokenERC20.sol":4865:5233  function burn(uint256 _value) public returns (bool success) {... */
+      pop
+      tag_34
+      0x4
+      dup1
+      calldatasize
+      sub
+      dup2
+      add
+      swap1
+      dup1
+      dup1
+      calldataload
+      swap1
+      0x20
+      add
+      swap1
+      swap3
+      swap2
+      swap1
+      pop
+      pop
+      pop
+      jump(tag_35)
+    tag_34:
+      mload(0x40)
+      dup1
+      dup3
+      iszero
+      iszero
+      iszero
+      iszero
+      dup2
+      mstore
+      0x20
+      add
+      swap2
+      pop
+      pop
+      mload(0x40)
+      dup1
+      swap2
+      sub
+      swap1
+      return
+        /* "contracts/TokenERC20.sol":453:498  mapping (address => uint256) public balanceOf */
+    tag_8:
+      callvalue
+        /* "--CODEGEN--":8:17   */
+      dup1
+        /* "--CODEGEN--":5:7   */
+      iszero
+      tag_36
+      jumpi
+        /* "--CODEGEN--":30:31   */
+      0x0
+        /* "--CODEGEN--":27:28   */
+      dup1
+        /* "--CODEGEN--":20:32   */
+      revert
+        /* "--CODEGEN--":5:7   */
+    tag_36:
+        /* "contracts/TokenERC20.sol":453:498  mapping (address => uint256) public balanceOf */
+      pop
+      tag_37
+      0x4
+      dup1
+      calldatasize
+      sub
+      dup2
+      add
+      swap1
+      dup1
+      dup1
+      calldataload
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      swap1
+      0x20
+      add
+      swap1
+      swap3
+      swap2
+      swap1
+      pop
+      pop
+      pop
+      jump(tag_38)
+    tag_37:
+      mload(0x40)
+      dup1
+      dup3
+      dup2
+      mstore
+      0x20
+      add
+      swap2
+      pop
+      pop
+      mload(0x40)
+      dup1
+      swap2
+      sub
+      swap1
+      return
+        /* "contracts/TokenERC20.sol":5486:6089  function burnFrom(address _from, uint256 _value) public returns (bool success) {... */
+    tag_9:
+      callvalue
+        /* "--CODEGEN--":8:17   */
+      dup1
+        /* "--CODEGEN--":5:7   */
+      iszero
+      tag_39
+      jumpi
+        /* "--CODEGEN--":30:31   */
+      0x0
+        /* "--CODEGEN--":27:28   */
+      dup1
+        /* "--CODEGEN--":20:32   */
+      revert
+        /* "--CODEGEN--":5:7   */
+    tag_39:
+        /* "contracts/TokenERC20.sol":5486:6089  function burnFrom(address _from, uint256 _value) public returns (bool success) {... */
+      pop
+      tag_40
+      0x4
+      dup1
+      calldatasize
+      sub
+      dup2
+      add
+      swap1
+      dup1
+      dup1
+      calldataload
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      swap1
+      0x20
+      add
+      swap1
+      swap3
+      swap2
+      swap1
+      dup1
+      calldataload
+      swap1
+      0x20
+      add
+      swap1
+      swap3
+      swap2
+      swap1
+      pop
+      pop
+      pop
+      jump(tag_41)
+    tag_40:
+      mload(0x40)
+      dup1
+      dup3
+      iszero
+      iszero
+      iszero
+      iszero
+      dup2
+      mstore
+      0x20
+      add
+      swap2
+      pop
+      pop
+      mload(0x40)
+      dup1
+      swap2
+      sub
+      swap1
+      return
+        /* "contracts/TokenERC20.sol":243:263  string public symbol */
+    tag_10:
+      callvalue
+        /* "--CODEGEN--":8:17   */
+      dup1
+        /* "--CODEGEN--":5:7   */
+      iszero
+      tag_42
+      jumpi
+        /* "--CODEGEN--":30:31   */
+      0x0
+        /* "--CODEGEN--":27:28   */
+      dup1
+        /* "--CODEGEN--":20:32   */
+      revert
+        /* "--CODEGEN--":5:7   */
+    tag_42:
+        /* "contracts/TokenERC20.sol":243:263  string public symbol */
+      pop
+      tag_43
+      jump(tag_44)
+    tag_43:
+      mload(0x40)
+      dup1
+      dup1
+      0x20
+      add
+      dup3
+      dup2
+      sub
+      dup3
+      mstore
+      dup4
+      dup2
+      dup2
+      mload
+      dup2
+      mstore
+      0x20
+      add
+      swap2
+      pop
+      dup1
+      mload
+      swap1
+      0x20
+      add
+      swap1
+      dup1
+      dup4
+      dup4
+        /* "--CODEGEN--":23:24   */
+      0x0
+        /* "--CODEGEN--":8:108   */
+    tag_45:
+        /* "--CODEGEN--":33:36   */
+      dup4
+        /* "--CODEGEN--":30:31   */
+      dup2
+        /* "--CODEGEN--":27:37   */
+      lt
+        /* "--CODEGEN--":8:108   */
+      iszero
+      tag_46
+      jumpi
+        /* "--CODEGEN--":99:100   */
+      dup1
+        /* "--CODEGEN--":94:97   */
+      dup3
+        /* "--CODEGEN--":90:101   */
+      add
+        /* "--CODEGEN--":84:102   */
+      mload
+        /* "--CODEGEN--":80:81   */
+      dup2
+        /* "--CODEGEN--":75:78   */
+      dup5
+        /* "--CODEGEN--":71:82   */
+      add
+        /* "--CODEGEN--":64:103   */
+      mstore
+        /* "--CODEGEN--":52:54   */
+      0x20
+        /* "--CODEGEN--":49:50   */
+      dup2
+        /* "--CODEGEN--":45:55   */
+      add
+        /* "--CODEGEN--":40:55   */
+      swap1
+      pop
+        /* "--CODEGEN--":8:108   */
+      jump(tag_45)
+    tag_46:
+        /* "--CODEGEN--":12:26   */
+      pop
+        /* "contracts/TokenERC20.sol":243:263  string public symbol */
+      pop
+      pop
+      pop
+      swap1
+      pop
+      swap1
+      dup2
+      add
+      swap1
+      0x1f
+      and
+      dup1
+      iszero
+      tag_48
+      jumpi
+      dup1
+      dup3
+      sub
+      dup1
+      mload
+      0x1
+      dup4
+      0x20
+      sub
+      0x100
+      exp
+      sub
+      not
+      and
+      dup2
+      mstore
+      0x20
+      add
+      swap2
+      pop
+    tag_48:
+      pop
+      swap3
+      pop
+      pop
+      pop
+      mload(0x40)
+      dup1
+      swap2
+      sub
+      swap1
+      return
+        /* "contracts/TokenERC20.sol":2784:2933  function transfer(address _to, uint256 _value) public returns (bool success) {... */
+    tag_11:
+      callvalue
+        /* "--CODEGEN--":8:17   */
+      dup1
+        /* "--CODEGEN--":5:7   */
+      iszero
+      tag_49
+      jumpi
+        /* "--CODEGEN--":30:31   */
+      0x0
+        /* "--CODEGEN--":27:28   */
+      dup1
+        /* "--CODEGEN--":20:32   */
+      revert
+        /* "--CODEGEN--":5:7   */
+    tag_49:
+        /* "contracts/TokenERC20.sol":2784:2933  function transfer(address _to, uint256 _value) public returns (bool success) {... */
+      pop
+      tag_50
+      0x4
+      dup1
+      calldatasize
+      sub
+      dup2
+      add
+      swap1
+      dup1
+      dup1
+      calldataload
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      swap1
+      0x20
+      add
+      swap1
+      swap3
+      swap2
+      swap1
+      dup1
+      calldataload
+      swap1
+      0x20
+      add
+      swap1
+      swap3
+      swap2
+      swap1
+      pop
+      pop
+      pop
+      jump(tag_51)
+    tag_50:
+      mload(0x40)
+      dup1
+      dup3
+      iszero
+      iszero
+      iszero
+      iszero
+      dup2
+      mstore
+      0x20
+      add
+      swap2
+      pop
+      pop
+      mload(0x40)
+      dup1
+      swap2
+      sub
+      swap1
+      return
+        /* "contracts/TokenERC20.sol":4360:4699  function approveAndCall(address _spender, uint256 _value, bytes _extraData)... */
+    tag_12:
+      callvalue
+        /* "--CODEGEN--":8:17   */
+      dup1
+        /* "--CODEGEN--":5:7   */
+      iszero
+      tag_52
+      jumpi
+        /* "--CODEGEN--":30:31   */
+      0x0
+        /* "--CODEGEN--":27:28   */
+      dup1
+        /* "--CODEGEN--":20:32   */
+      revert
+        /* "--CODEGEN--":5:7   */
+    tag_52:
+        /* "contracts/TokenERC20.sol":4360:4699  function approveAndCall(address _spender, uint256 _value, bytes _extraData)... */
+      pop
+      tag_53
+      0x4
+      dup1
+      calldatasize
+      sub
+      dup2
+      add
+      swap1
+      dup1
+      dup1
+      calldataload
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      swap1
+      0x20
+      add
+      swap1
+      swap3
+      swap2
+      swap1
+      dup1
+      calldataload
+      swap1
+      0x20
+      add
+      swap1
+      swap3
+      swap2
+      swap1
+      dup1
+      calldataload
+      swap1
+      0x20
+      add
+      swap1
+      dup3
+      add
+      dup1
+      calldataload
+      swap1
+      0x20
+      add
+      swap1
+      dup1
+      dup1
+      0x1f
+      add
+      0x20
+      dup1
+      swap2
+      div
+      mul
+      0x20
+      add
+      mload(0x40)
+      swap1
+      dup2
+      add
+      0x40
+      mstore
+      dup1
+      swap4
+      swap3
+      swap2
+      swap1
+      dup2
+      dup2
+      mstore
+      0x20
+      add
+      dup4
+      dup4
+      dup1
+      dup3
+      dup5
+      calldatacopy
+      dup3
+      add
+      swap2
+      pop
+      pop
+      pop
+      pop
+      pop
+      pop
+      swap2
+      swap3
+      swap2
+      swap3
+      swap1
+      pop
+      pop
+      pop
+      jump(tag_54)
+    tag_53:
+      mload(0x40)
+      dup1
+      dup3
+      iszero
+      iszero
+      iszero
+      iszero
+      dup2
+      mstore
+      0x20
+      add
+      swap2
+      pop
+      pop
+      mload(0x40)
+      dup1
+      swap2
+      sub
+      swap1
+      return
+        /* "contracts/TokenERC20.sol":504:570  mapping (address => mapping (address => uint256)) public allowance */
+    tag_13:
+      callvalue
+        /* "--CODEGEN--":8:17   */
+      dup1
+        /* "--CODEGEN--":5:7   */
+      iszero
+      tag_55
+      jumpi
+        /* "--CODEGEN--":30:31   */
+      0x0
+        /* "--CODEGEN--":27:28   */
+      dup1
+        /* "--CODEGEN--":20:32   */
+      revert
+        /* "--CODEGEN--":5:7   */
+    tag_55:
+        /* "contracts/TokenERC20.sol":504:570  mapping (address => mapping (address => uint256)) public allowance */
+      pop
+      tag_56
+      0x4
+      dup1
+      calldatasize
+      sub
+      dup2
+      add
+      swap1
+      dup1
+      dup1
+      calldataload
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      swap1
+      0x20
+      add
+      swap1
+      swap3
+      swap2
+      swap1
+      dup1
+      calldataload
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      swap1
+      0x20
+      add
+      swap1
+      swap3
+      swap2
+      swap1
+      pop
+      pop
+      pop
+      jump(tag_57)
+    tag_56:
+      mload(0x40)
+      dup1
+      dup3
+      dup2
+      mstore
+      0x20
+      add
+      swap2
+      pop
+      pop
+      mload(0x40)
+      dup1
+      swap2
+      sub
+      swap1
+      return
+        /* "contracts/TokenERC20.sol":219:237  string public name */
+    tag_16:
+      0x0
+      dup1
+      sload
+      0x1
+      dup2
+      0x1
+      and
+      iszero
+      0x100
+      mul
+      sub
+      and
+      0x2
+      swap1
+      div
+      dup1
+      0x1f
+      add
+      0x20
+      dup1
+      swap2
+      div
+      mul
+      0x20
+      add
+      mload(0x40)
+      swap1
+      dup2
+      add
+      0x40
+      mstore
+      dup1
+      swap3
+      swap2
+      swap1
+      dup2
+      dup2
+      mstore
+      0x20
+      add
+      dup3
+      dup1
+      sload
+      0x1
+      dup2
+      0x1
+      and
+      iszero
+      0x100
+      mul
+      sub
+      and
+      0x2
+      swap1
+      div
+      dup1
+      iszero
+      tag_58
+      jumpi
+      dup1
+      0x1f
+      lt
+      tag_59
+      jumpi
+      0x100
+      dup1
+      dup4
+      sload
+      div
+      mul
+      dup4
+      mstore
+      swap2
+      0x20
+      add
+      swap2
+      jump(tag_58)
+    tag_59:
+      dup3
+      add
+      swap2
+      swap1
+      0x0
+      mstore
+      keccak256(0x0, 0x20)
+      swap1
+    tag_60:
+      dup2
+      sload
+      dup2
+      mstore
+      swap1
+      0x1
+      add
+      swap1
+      0x20
+      add
+      dup1
+      dup4
+      gt
+      tag_60
+      jumpi
+      dup3
+      swap1
+      sub
+      0x1f
+      and
+      dup3
+      add
+      swap2
+    tag_58:
+      pop
+      pop
+      pop
+      pop
+      pop
+      dup2
+      jump	// out
+        /* "contracts/TokenERC20.sol":3752:3972  function approve(address _spender, uint256 _value) public... */
+    tag_23:
+        /* "contracts/TokenERC20.sol":3827:3839  bool success */
+      0x0
+        /* "contracts/TokenERC20.sol":3885:3891  _value */
+      dup2
+        /* "contracts/TokenERC20.sol":3851:3860  allowance */
+      0x5
+        /* "contracts/TokenERC20.sol":3851:3872  allowance[msg.sender] */
+      0x0
+        /* "contracts/TokenERC20.sol":3861:3871  msg.sender */
+      caller
+        /* "contracts/TokenERC20.sol":3851:3872  allowance[msg.sender] */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      dup2
+      mstore
+      0x20
+      add
+      swap1
+      dup2
+      mstore
+      0x20
+      add
+      0x0
+      keccak256
+        /* "contracts/TokenERC20.sol":3851:3882  allowance[msg.sender][_spender] */
+      0x0
+        /* "contracts/TokenERC20.sol":3873:3881  _spender */
+      dup6
+        /* "contracts/TokenERC20.sol":3851:3882  allowance[msg.sender][_spender] */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      dup2
+      mstore
+      0x20
+      add
+      swap1
+      dup2
+      mstore
+      0x20
+      add
+      0x0
+      keccak256
+        /* "contracts/TokenERC20.sol":3851:3891  allowance[msg.sender][_spender] = _value */
+      dup2
+      swap1
+      sstore
+      pop
+        /* "contracts/TokenERC20.sol":3927:3935  _spender */
+      dup3
+        /* "contracts/TokenERC20.sol":3906:3944  Approval(msg.sender, _spender, _value) */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+        /* "contracts/TokenERC20.sol":3915:3925  msg.sender */
+      caller
+        /* "contracts/TokenERC20.sol":3906:3944  Approval(msg.sender, _spender, _value) */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925
+        /* "contracts/TokenERC20.sol":3937:3943  _value */
+      dup5
+        /* "contracts/TokenERC20.sol":3906:3944  Approval(msg.sender, _spender, _value) */
+      mload(0x40)
+      dup1
+      dup3
+      dup2
+      mstore
+      0x20
+      add
+      swap2
+      pop
+      pop
+      mload(0x40)
+      dup1
+      swap2
+      sub
+      swap1
+      log3
+        /* "contracts/TokenERC20.sol":3961:3965  true */
+      0x1
+        /* "contracts/TokenERC20.sol":3954:3965  return true */
+      swap1
+      pop
+        /* "contracts/TokenERC20.sol":3752:3972  function approve(address _spender, uint256 _value) public... */
+      swap3
+      swap2
+      pop
+      pop
+      jump	// out
+        /* "contracts/TokenERC20.sol":373:399  uint256 public totalSupply */
+    tag_26:
+      sload(0x3)
+      dup2
+      jump	// out
+        /* "contracts/TokenERC20.sol":3202:3493  function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {... */
+    tag_29:
+        /* "contracts/TokenERC20.sol":3284:3296  bool success */
+      0x0
+        /* "contracts/TokenERC20.sol":3326:3335  allowance */
+      0x5
+        /* "contracts/TokenERC20.sol":3326:3342  allowance[_from] */
+      0x0
+        /* "contracts/TokenERC20.sol":3336:3341  _from */
+      dup6
+        /* "contracts/TokenERC20.sol":3326:3342  allowance[_from] */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      dup2
+      mstore
+      0x20
+      add
+      swap1
+      dup2
+      mstore
+      0x20
+      add
+      0x0
+      keccak256
+        /* "contracts/TokenERC20.sol":3326:3354  allowance[_from][msg.sender] */
+      0x0
+        /* "contracts/TokenERC20.sol":3343:3353  msg.sender */
+      caller
+        /* "contracts/TokenERC20.sol":3326:3354  allowance[_from][msg.sender] */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      dup2
+      mstore
+      0x20
+      add
+      swap1
+      dup2
+      mstore
+      0x20
+      add
+      0x0
+      keccak256
+      sload
+        /* "contracts/TokenERC20.sol":3316:3322  _value */
+      dup3
+        /* "contracts/TokenERC20.sol":3316:3354  _value <= allowance[_from][msg.sender] */
+      gt
+      iszero
+        /* "contracts/TokenERC20.sol":3308:3355  require(_value <= allowance[_from][msg.sender]) */
+      iszero
+      iszero
+      tag_63
+      jumpi
+      0x0
+      dup1
+      revert
+    tag_63:
+        /* "contracts/TokenERC20.sol":3420:3426  _value */
+      dup2
+        /* "contracts/TokenERC20.sol":3388:3397  allowance */
+      0x5
+        /* "contracts/TokenERC20.sol":3388:3404  allowance[_from] */
+      0x0
+        /* "contracts/TokenERC20.sol":3398:3403  _from */
+      dup7
+        /* "contracts/TokenERC20.sol":3388:3404  allowance[_from] */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      dup2
+      mstore
+      0x20
+      add
+      swap1
+      dup2
+      mstore
+      0x20
+      add
+      0x0
+      keccak256
+        /* "contracts/TokenERC20.sol":3388:3416  allowance[_from][msg.sender] */
+      0x0
+        /* "contracts/TokenERC20.sol":3405:3415  msg.sender */
+      caller
+        /* "contracts/TokenERC20.sol":3388:3416  allowance[_from][msg.sender] */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      dup2
+      mstore
+      0x20
+      add
+      swap1
+      dup2
+      mstore
+      0x20
+      add
+      0x0
+      keccak256
+      0x0
+        /* "contracts/TokenERC20.sol":3388:3426  allowance[_from][msg.sender] -= _value */
+      dup3
+      dup3
+      sload
+      sub
+      swap3
+      pop
+      pop
+      dup2
+      swap1
+      sstore
+      pop
+        /* "contracts/TokenERC20.sol":3436:3465  _transfer(_from, _to, _value) */
+      tag_64
+        /* "contracts/TokenERC20.sol":3446:3451  _from */
+      dup5
+        /* "contracts/TokenERC20.sol":3453:3456  _to */
+      dup5
+        /* "contracts/TokenERC20.sol":3458:3464  _value */
+      dup5
+        /* "contracts/TokenERC20.sol":3436:3445  _transfer */
+      tag_65
+        /* "contracts/TokenERC20.sol":3436:3465  _transfer(_from, _to, _value) */
+      jump	// in
+    tag_64:
+        /* "contracts/TokenERC20.sol":3482:3486  true */
+      0x1
+        /* "contracts/TokenERC20.sol":3475:3486  return true */
+      swap1
+      pop
+        /* "contracts/TokenERC20.sol":3202:3493  function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {... */
+      swap4
+      swap3
+      pop
+      pop
+      pop
+      jump	// out
+        /* "contracts/TokenERC20.sol":269:295  uint8 public decimals = 18 */
+    tag_32:
+      0x2
+      0x0
+      swap1
+      sload
+      swap1
+      0x100
+      exp
+      swap1
+      div
+      0xff
+      and
+      dup2
+      jump	// out
+        /* "contracts/TokenERC20.sol":4865:5233  function burn(uint256 _value) public returns (bool success) {... */
+    tag_35:
+        /* "contracts/TokenERC20.sol":4911:4923  bool success */
+      0x0
+        /* "contracts/TokenERC20.sol":4968:4974  _value */
+      dup2
+        /* "contracts/TokenERC20.sol":4943:4952  balanceOf */
+      0x4
+        /* "contracts/TokenERC20.sol":4943:4964  balanceOf[msg.sender] */
+      0x0
+        /* "contracts/TokenERC20.sol":4953:4963  msg.sender */
+      caller
+        /* "contracts/TokenERC20.sol":4943:4964  balanceOf[msg.sender] */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      dup2
+      mstore
+      0x20
+      add
+      swap1
+      dup2
+      mstore
+      0x20
+      add
+      0x0
+      keccak256
+      sload
+        /* "contracts/TokenERC20.sol":4943:4974  balanceOf[msg.sender] >= _value */
+      lt
+      iszero
+        /* "contracts/TokenERC20.sol":4935:4975  require(balanceOf[msg.sender] >= _value) */
+      iszero
+      iszero
+      tag_67
+      jumpi
+      0x0
+      dup1
+      revert
+    tag_67:
+        /* "contracts/TokenERC20.sol":5046:5052  _value */
+      dup2
+        /* "contracts/TokenERC20.sol":5021:5030  balanceOf */
+      0x4
+        /* "contracts/TokenERC20.sol":5021:5042  balanceOf[msg.sender] */
+      0x0
+        /* "contracts/TokenERC20.sol":5031:5041  msg.sender */
+      caller
+        /* "contracts/TokenERC20.sol":5021:5042  balanceOf[msg.sender] */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      dup2
+      mstore
+      0x20
+      add
+      swap1
+      dup2
+      mstore
+      0x20
+      add
+      0x0
+      keccak256
+      0x0
+        /* "contracts/TokenERC20.sol":5021:5052  balanceOf[msg.sender] -= _value */
+      dup3
+      dup3
+      sload
+      sub
+      swap3
+      pop
+      pop
+      dup2
+      swap1
+      sstore
+      pop
+        /* "contracts/TokenERC20.sol":5116:5122  _value */
+      dup2
+        /* "contracts/TokenERC20.sol":5101:5112  totalSupply */
+      0x3
+      0x0
+        /* "contracts/TokenERC20.sol":5101:5122  totalSupply -= _value */
+      dup3
+      dup3
+      sload
+      sub
+      swap3
+      pop
+      pop
+      dup2
+      swap1
+      sstore
+      pop
+        /* "contracts/TokenERC20.sol":5186:5196  msg.sender */
+      caller
+        /* "contracts/TokenERC20.sol":5181:5205  Burn(msg.sender, _value) */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      0xcc16f5dbb4873280815c1ee09dbd06736cffcc184412cf7a71a0fdb75d397ca5
+        /* "contracts/TokenERC20.sol":5198:5204  _value */
+      dup4
+        /* "contracts/TokenERC20.sol":5181:5205  Burn(msg.sender, _value) */
+      mload(0x40)
+      dup1
+      dup3
+      dup2
+      mstore
+      0x20
+      add
+      swap2
+      pop
+      pop
+      mload(0x40)
+      dup1
+      swap2
+      sub
+      swap1
+      log2
+        /* "contracts/TokenERC20.sol":5222:5226  true */
+      0x1
+        /* "contracts/TokenERC20.sol":5215:5226  return true */
+      swap1
+      pop
+        /* "contracts/TokenERC20.sol":4865:5233  function burn(uint256 _value) public returns (bool success) {... */
+      swap2
+      swap1
+      pop
+      jump	// out
+        /* "contracts/TokenERC20.sol":453:498  mapping (address => uint256) public balanceOf */
+    tag_38:
+      mstore(0x20, 0x4)
+      dup1
+      0x0
+      mstore
+      keccak256(0x0, 0x40)
+      0x0
+      swap2
+      pop
+      swap1
+      pop
+      sload
+      dup2
+      jump	// out
+        /* "contracts/TokenERC20.sol":5486:6089  function burnFrom(address _from, uint256 _value) public returns (bool success) {... */
+    tag_41:
+        /* "contracts/TokenERC20.sol":5551:5563  bool success */
+      0x0
+        /* "contracts/TokenERC20.sol":5603:5609  _value */
+      dup2
+        /* "contracts/TokenERC20.sol":5583:5592  balanceOf */
+      0x4
+        /* "contracts/TokenERC20.sol":5583:5599  balanceOf[_from] */
+      0x0
+        /* "contracts/TokenERC20.sol":5593:5598  _from */
+      dup6
+        /* "contracts/TokenERC20.sol":5583:5599  balanceOf[_from] */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      dup2
+      mstore
+      0x20
+      add
+      swap1
+      dup2
+      mstore
+      0x20
+      add
+      0x0
+      keccak256
+      sload
+        /* "contracts/TokenERC20.sol":5583:5609  balanceOf[_from] >= _value */
+      lt
+      iszero
+        /* "contracts/TokenERC20.sol":5575:5610  require(balanceOf[_from] >= _value) */
+      iszero
+      iszero
+      tag_69
+      jumpi
+      0x0
+      dup1
+      revert
+    tag_69:
+        /* "contracts/TokenERC20.sol":5696:5705  allowance */
+      0x5
+        /* "contracts/TokenERC20.sol":5696:5712  allowance[_from] */
+      0x0
+        /* "contracts/TokenERC20.sol":5706:5711  _from */
+      dup5
+        /* "contracts/TokenERC20.sol":5696:5712  allowance[_from] */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      dup2
+      mstore
+      0x20
+      add
+      swap1
+      dup2
+      mstore
+      0x20
+      add
+      0x0
+      keccak256
+        /* "contracts/TokenERC20.sol":5696:5724  allowance[_from][msg.sender] */
+      0x0
+        /* "contracts/TokenERC20.sol":5713:5723  msg.sender */
+      caller
+        /* "contracts/TokenERC20.sol":5696:5724  allowance[_from][msg.sender] */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      dup2
+      mstore
+      0x20
+      add
+      swap1
+      dup2
+      mstore
+      0x20
+      add
+      0x0
+      keccak256
+      sload
+        /* "contracts/TokenERC20.sol":5686:5692  _value */
+      dup3
+        /* "contracts/TokenERC20.sol":5686:5724  _value <= allowance[_from][msg.sender] */
+      gt
+      iszero
+        /* "contracts/TokenERC20.sol":5678:5725  require(_value <= allowance[_from][msg.sender]) */
+      iszero
+      iszero
+      tag_70
+      jumpi
+      0x0
+      dup1
+      revert
+    tag_70:
+        /* "contracts/TokenERC20.sol":5777:5783  _value */
+      dup2
+        /* "contracts/TokenERC20.sol":5757:5766  balanceOf */
+      0x4
+        /* "contracts/TokenERC20.sol":5757:5773  balanceOf[_from] */
+      0x0
+        /* "contracts/TokenERC20.sol":5767:5772  _from */
+      dup6
+        /* "contracts/TokenERC20.sol":5757:5773  balanceOf[_from] */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      dup2
+      mstore
+      0x20
+      add
+      swap1
+      dup2
+      mstore
+      0x20
+      add
+      0x0
+      keccak256
+      0x0
+        /* "contracts/TokenERC20.sol":5757:5783  balanceOf[_from] -= _value */
+      dup3
+      dup3
+      sload
+      sub
+      swap3
+      pop
+      pop
+      dup2
+      swap1
+      sstore
+      pop
+        /* "contracts/TokenERC20.sol":5887:5893  _value */
+      dup2
+        /* "contracts/TokenERC20.sol":5855:5864  allowance */
+      0x5
+        /* "contracts/TokenERC20.sol":5855:5871  allowance[_from] */
+      0x0
+        /* "contracts/TokenERC20.sol":5865:5870  _from */
+      dup6
+        /* "contracts/TokenERC20.sol":5855:5871  allowance[_from] */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      dup2
+      mstore
+      0x20
+      add
+      swap1
+      dup2
+      mstore
+      0x20
+      add
+      0x0
+      keccak256
+        /* "contracts/TokenERC20.sol":5855:5883  allowance[_from][msg.sender] */
+      0x0
+        /* "contracts/TokenERC20.sol":5872:5882  msg.sender */
+      caller
+        /* "contracts/TokenERC20.sol":5855:5883  allowance[_from][msg.sender] */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      dup2
+      mstore
+      0x20
+      add
+      swap1
+      dup2
+      mstore
+      0x20
+      add
+      0x0
+      keccak256
+      0x0
+        /* "contracts/TokenERC20.sol":5855:5893  allowance[_from][msg.sender] -= _value */
+      dup3
+      dup3
+      sload
+      sub
+      swap3
+      pop
+      pop
+      dup2
+      swap1
+      sstore
+      pop
+        /* "contracts/TokenERC20.sol":5970:5976  _value */
+      dup2
+        /* "contracts/TokenERC20.sol":5955:5966  totalSupply */
+      0x3
+      0x0
+        /* "contracts/TokenERC20.sol":5955:5976  totalSupply -= _value */
+      dup3
+      dup3
+      sload
+      sub
+      swap3
+      pop
+      pop
+      dup2
+      swap1
+      sstore
+      pop
+        /* "contracts/TokenERC20.sol":6047:6052  _from */
+      dup3
+        /* "contracts/TokenERC20.sol":6042:6061  Burn(_from, _value) */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      0xcc16f5dbb4873280815c1ee09dbd06736cffcc184412cf7a71a0fdb75d397ca5
+        /* "contracts/TokenERC20.sol":6054:6060  _value */
+      dup4
+        /* "contracts/TokenERC20.sol":6042:6061  Burn(_from, _value) */
+      mload(0x40)
+      dup1
+      dup3
+      dup2
+      mstore
+      0x20
+      add
+      swap2
+      pop
+      pop
+      mload(0x40)
+      dup1
+      swap2
+      sub
+      swap1
+      log2
+        /* "contracts/TokenERC20.sol":6078:6082  true */
+      0x1
+        /* "contracts/TokenERC20.sol":6071:6082  return true */
+      swap1
+      pop
+        /* "contracts/TokenERC20.sol":5486:6089  function burnFrom(address _from, uint256 _value) public returns (bool success) {... */
+      swap3
+      swap2
+      pop
+      pop
+      jump	// out
+        /* "contracts/TokenERC20.sol":243:263  string public symbol */
+    tag_44:
+      0x1
+      dup1
+      sload
+      0x1
+      dup2
+      0x1
+      and
+      iszero
+      0x100
+      mul
+      sub
+      and
+      0x2
+      swap1
+      div
+      dup1
+      0x1f
+      add
+      0x20
+      dup1
+      swap2
+      div
+      mul
+      0x20
+      add
+      mload(0x40)
+      swap1
+      dup2
+      add
+      0x40
+      mstore
+      dup1
+      swap3
+      swap2
+      swap1
+      dup2
+      dup2
+      mstore
+      0x20
+      add
+      dup3
+      dup1
+      sload
+      0x1
+      dup2
+      0x1
+      and
+      iszero
+      0x100
+      mul
+      sub
+      and
+      0x2
+      swap1
+      div
+      dup1
+      iszero
+      tag_71
+      jumpi
+      dup1
+      0x1f
+      lt
+      tag_72
+      jumpi
+      0x100
+      dup1
+      dup4
+      sload
+      div
+      mul
+      dup4
+      mstore
+      swap2
+      0x20
+      add
+      swap2
+      jump(tag_71)
+    tag_72:
+      dup3
+      add
+      swap2
+      swap1
+      0x0
+      mstore
+      keccak256(0x0, 0x20)
+      swap1
+    tag_73:
+      dup2
+      sload
+      dup2
+      mstore
+      swap1
+      0x1
+      add
+      swap1
+      0x20
+      add
+      dup1
+      dup4
+      gt
+      tag_73
+      jumpi
+      dup3
+      swap1
+      sub
+      0x1f
+      and
+      dup3
+      add
+      swap2
+    tag_71:
+      pop
+      pop
+      pop
+      pop
+      pop
+      dup2
+      jump	// out
+        /* "contracts/TokenERC20.sol":2784:2933  function transfer(address _to, uint256 _value) public returns (bool success) {... */
+    tag_51:
+        /* "contracts/TokenERC20.sol":2847:2859  bool success */
+      0x0
+        /* "contracts/TokenERC20.sol":2871:2905  _transfer(msg.sender, _to, _value) */
+      tag_75
+        /* "contracts/TokenERC20.sol":2881:2891  msg.sender */
+      caller
+        /* "contracts/TokenERC20.sol":2893:2896  _to */
+      dup5
+        /* "contracts/TokenERC20.sol":2898:2904  _value */
+      dup5
+        /* "contracts/TokenERC20.sol":2871:2880  _transfer */
+      tag_65
+        /* "contracts/TokenERC20.sol":2871:2905  _transfer(msg.sender, _to, _value) */
+      jump	// in
+    tag_75:
+        /* "contracts/TokenERC20.sol":2922:2926  true */
+      0x1
+        /* "contracts/TokenERC20.sol":2915:2926  return true */
+      swap1
+      pop
+        /* "contracts/TokenERC20.sol":2784:2933  function transfer(address _to, uint256 _value) public returns (bool success) {... */
+      swap3
+      swap2
+      pop
+      pop
+      jump	// out
+        /* "contracts/TokenERC20.sol":4360:4699  function approveAndCall(address _spender, uint256 _value, bytes _extraData)... */
+    tag_54:
+        /* "contracts/TokenERC20.sol":4468:4480  bool success */
+      0x0
+        /* "contracts/TokenERC20.sol":4492:4514  tokenRecipient spender */
+      dup1
+        /* "contracts/TokenERC20.sol":4532:4540  _spender */
+      dup5
+        /* "contracts/TokenERC20.sol":4492:4541  tokenRecipient spender = tokenRecipient(_spender) */
+      swap1
+      pop
+        /* "contracts/TokenERC20.sol":4555:4580  approve(_spender, _value) */
+      tag_77
+        /* "contracts/TokenERC20.sol":4563:4571  _spender */
+      dup6
+        /* "contracts/TokenERC20.sol":4573:4579  _value */
+      dup6
+        /* "contracts/TokenERC20.sol":4555:4562  approve */
+      tag_23
+        /* "contracts/TokenERC20.sol":4555:4580  approve(_spender, _value) */
+      jump	// in
+    tag_77:
+        /* "contracts/TokenERC20.sol":4551:4693  if (approve(_spender, _value)) {... */
+      iszero
+      tag_78
+      jumpi
+        /* "contracts/TokenERC20.sol":4596:4603  spender */
+      dup1
+        /* "contracts/TokenERC20.sol":4596:4619  spender.receiveApproval */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      0x8f4ffcb1
+        /* "contracts/TokenERC20.sol":4620:4630  msg.sender */
+      caller
+        /* "contracts/TokenERC20.sol":4632:4638  _value */
+      dup7
+        /* "contracts/TokenERC20.sol":4640:4644  this */
+      address
+        /* "contracts/TokenERC20.sol":4646:4656  _extraData */
+      dup8
+        /* "contracts/TokenERC20.sol":4596:4657  spender.receiveApproval(msg.sender, _value, this, _extraData) */
+      mload(0x40)
+      dup6
+      0xffffffff
+      and
+      0x100000000000000000000000000000000000000000000000000000000
+      mul
+      dup2
+      mstore
+      0x4
+      add
+      dup1
+      dup6
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      dup2
+      mstore
+      0x20
+      add
+      dup5
+      dup2
+      mstore
+      0x20
+      add
+      dup4
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      dup2
+      mstore
+      0x20
+      add
+      dup1
+      0x20
+      add
+      dup3
+      dup2
+      sub
+      dup3
+      mstore
+      dup4
+      dup2
+      dup2
+      mload
+      dup2
+      mstore
+      0x20
+      add
+      swap2
+      pop
+      dup1
+      mload
+      swap1
+      0x20
+      add
+      swap1
+      dup1
+      dup4
+      dup4
+        /* "--CODEGEN--":23:24   */
+      0x0
+        /* "--CODEGEN--":8:108   */
+    tag_79:
+        /* "--CODEGEN--":33:36   */
+      dup4
+        /* "--CODEGEN--":30:31   */
+      dup2
+        /* "--CODEGEN--":27:37   */
+      lt
+        /* "--CODEGEN--":8:108   */
+      iszero
+      tag_80
+      jumpi
+        /* "--CODEGEN--":99:100   */
+      dup1
+        /* "--CODEGEN--":94:97   */
+      dup3
+        /* "--CODEGEN--":90:101   */
+      add
+        /* "--CODEGEN--":84:102   */
+      mload
+        /* "--CODEGEN--":80:81   */
+      dup2
+        /* "--CODEGEN--":75:78   */
+      dup5
+        /* "--CODEGEN--":71:82   */
+      add
+        /* "--CODEGEN--":64:103   */
+      mstore
+        /* "--CODEGEN--":52:54   */
+      0x20
+        /* "--CODEGEN--":49:50   */
+      dup2
+        /* "--CODEGEN--":45:55   */
+      add
+        /* "--CODEGEN--":40:55   */
+      swap1
+      pop
+        /* "--CODEGEN--":8:108   */
+      jump(tag_79)
+    tag_80:
+        /* "--CODEGEN--":12:26   */
+      pop
+        /* "contracts/TokenERC20.sol":4596:4657  spender.receiveApproval(msg.sender, _value, this, _extraData) */
+      pop
+      pop
+      pop
+      swap1
+      pop
+      swap1
+      dup2
+      add
+      swap1
+      0x1f
+      and
+      dup1
+      iszero
+      tag_82
+      jumpi
+      dup1
+      dup3
+      sub
+      dup1
+      mload
+      0x1
+      dup4
+      0x20
+      sub
+      0x100
+      exp
+      sub
+      not
+      and
+      dup2
+      mstore
+      0x20
+      add
+      swap2
+      pop
+    tag_82:
+      pop
+      swap6
+      pop
+      pop
+      pop
+      pop
+      pop
+      pop
+      0x0
+      mload(0x40)
+      dup1
+      dup4
+      sub
+      dup2
+      0x0
+      dup8
+      dup1
+      extcodesize
+      iszero
+        /* "--CODEGEN--":8:17   */
+      dup1
+        /* "--CODEGEN--":5:7   */
+      iszero
+      tag_83
+      jumpi
+        /* "--CODEGEN--":30:31   */
+      0x0
+        /* "--CODEGEN--":27:28   */
+      dup1
+        /* "--CODEGEN--":20:32   */
+      revert
+        /* "--CODEGEN--":5:7   */
+    tag_83:
+        /* "contracts/TokenERC20.sol":4596:4657  spender.receiveApproval(msg.sender, _value, this, _extraData) */
+      pop
+      gas
+      call
+      iszero
+        /* "--CODEGEN--":8:17   */
+      dup1
+        /* "--CODEGEN--":5:7   */
+      iszero
+      tag_84
+      jumpi
+        /* "--CODEGEN--":45:61   */
+      returndatasize
+        /* "--CODEGEN--":42:43   */
+      0x0
+        /* "--CODEGEN--":39:40   */
+      dup1
+        /* "--CODEGEN--":24:62   */
+      returndatacopy
+        /* "--CODEGEN--":77:93   */
+      returndatasize
+        /* "--CODEGEN--":74:75   */
+      0x0
+        /* "--CODEGEN--":67:94   */
+      revert
+        /* "--CODEGEN--":5:7   */
+    tag_84:
+        /* "contracts/TokenERC20.sol":4596:4657  spender.receiveApproval(msg.sender, _value, this, _extraData) */
+      pop
+      pop
+      pop
+      pop
+        /* "contracts/TokenERC20.sol":4678:4682  true */
+      0x1
+        /* "contracts/TokenERC20.sol":4671:4682  return true */
+      swap2
+      pop
+      jump(tag_76)
+        /* "contracts/TokenERC20.sol":4551:4693  if (approve(_spender, _value)) {... */
+    tag_78:
+        /* "contracts/TokenERC20.sol":4360:4699  function approveAndCall(address _spender, uint256 _value, bytes _extraData)... */
+    tag_76:
+      pop
+      swap4
+      swap3
+      pop
+      pop
+      pop
+      jump	// out
+        /* "contracts/TokenERC20.sol":504:570  mapping (address => mapping (address => uint256)) public allowance */
+    tag_57:
+      mstore(0x20, 0x5)
+      dup2
+      0x0
+      mstore
+      mstore(0x20, keccak256(0x0, 0x40))
+      dup1
+      0x0
+      mstore
+      keccak256(0x0, 0x40)
+      0x0
+      swap2
+      pop
+      swap2
+      pop
+      pop
+      sload
+      dup2
+      jump	// out
+        /* "contracts/TokenERC20.sol":1756:2583  function _transfer(address _from, address _to, uint _value) internal {... */
+    tag_65:
+        /* "contracts/TokenERC20.sol":2157:2178  uint previousBalances */
+      0x0
+        /* "contracts/TokenERC20.sol":1913:1916  0x0 */
+      dup1
+        /* "contracts/TokenERC20.sol":1906:1909  _to */
+      dup4
+        /* "contracts/TokenERC20.sol":1906:1916  _to != 0x0 */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      eq
+      iszero
+        /* "contracts/TokenERC20.sol":1898:1917  require(_to != 0x0) */
+      iszero
+      iszero
+      tag_86
+      jumpi
+      0x0
+      dup1
+      revert
+    tag_86:
+        /* "contracts/TokenERC20.sol":1997:2003  _value */
+      dup2
+        /* "contracts/TokenERC20.sol":1977:1986  balanceOf */
+      0x4
+        /* "contracts/TokenERC20.sol":1977:1993  balanceOf[_from] */
+      0x0
+        /* "contracts/TokenERC20.sol":1987:1992  _from */
+      dup7
+        /* "contracts/TokenERC20.sol":1977:1993  balanceOf[_from] */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      dup2
+      mstore
+      0x20
+      add
+      swap1
+      dup2
+      mstore
+      0x20
+      add
+      0x0
+      keccak256
+      sload
+        /* "contracts/TokenERC20.sol":1977:2003  balanceOf[_from] >= _value */
+      lt
+      iszero
+        /* "contracts/TokenERC20.sol":1969:2004  require(balanceOf[_from] >= _value) */
+      iszero
+      iszero
+      tag_87
+      jumpi
+      0x0
+      dup1
+      revert
+    tag_87:
+        /* "contracts/TokenERC20.sol":2080:2089  balanceOf */
+      0x4
+        /* "contracts/TokenERC20.sol":2080:2094  balanceOf[_to] */
+      0x0
+        /* "contracts/TokenERC20.sol":2090:2093  _to */
+      dup5
+        /* "contracts/TokenERC20.sol":2080:2094  balanceOf[_to] */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      dup2
+      mstore
+      0x20
+      add
+      swap1
+      dup2
+      mstore
+      0x20
+      add
+      0x0
+      keccak256
+      sload
+        /* "contracts/TokenERC20.sol":2070:2076  _value */
+      dup3
+        /* "contracts/TokenERC20.sol":2053:2062  balanceOf */
+      0x4
+        /* "contracts/TokenERC20.sol":2053:2067  balanceOf[_to] */
+      0x0
+        /* "contracts/TokenERC20.sol":2063:2066  _to */
+      dup7
+        /* "contracts/TokenERC20.sol":2053:2067  balanceOf[_to] */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      dup2
+      mstore
+      0x20
+      add
+      swap1
+      dup2
+      mstore
+      0x20
+      add
+      0x0
+      keccak256
+      sload
+        /* "contracts/TokenERC20.sol":2053:2076  balanceOf[_to] + _value */
+      add
+        /* "contracts/TokenERC20.sol":2053:2094  balanceOf[_to] + _value >= balanceOf[_to] */
+      lt
+      iszero
+        /* "contracts/TokenERC20.sol":2045:2095  require(balanceOf[_to] + _value >= balanceOf[_to]) */
+      iszero
+      iszero
+      tag_88
+      jumpi
+      0x0
+      dup1
+      revert
+    tag_88:
+        /* "contracts/TokenERC20.sol":2200:2209  balanceOf */
+      0x4
+        /* "contracts/TokenERC20.sol":2200:2214  balanceOf[_to] */
+      0x0
+        /* "contracts/TokenERC20.sol":2210:2213  _to */
+      dup5
+        /* "contracts/TokenERC20.sol":2200:2214  balanceOf[_to] */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      dup2
+      mstore
+      0x20
+      add
+      swap1
+      dup2
+      mstore
+      0x20
+      add
+      0x0
+      keccak256
+      sload
+        /* "contracts/TokenERC20.sol":2181:2190  balanceOf */
+      0x4
+        /* "contracts/TokenERC20.sol":2181:2197  balanceOf[_from] */
+      0x0
+        /* "contracts/TokenERC20.sol":2191:2196  _from */
+      dup7
+        /* "contracts/TokenERC20.sol":2181:2197  balanceOf[_from] */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      dup2
+      mstore
+      0x20
+      add
+      swap1
+      dup2
+      mstore
+      0x20
+      add
+      0x0
+      keccak256
+      sload
+        /* "contracts/TokenERC20.sol":2181:2214  balanceOf[_from] + balanceOf[_to] */
+      add
+        /* "contracts/TokenERC20.sol":2157:2214  uint previousBalances = balanceOf[_from] + balanceOf[_to] */
+      swap1
+      pop
+        /* "contracts/TokenERC20.sol":2280:2286  _value */
+      dup2
+        /* "contracts/TokenERC20.sol":2260:2269  balanceOf */
+      0x4
+        /* "contracts/TokenERC20.sol":2260:2276  balanceOf[_from] */
+      0x0
+        /* "contracts/TokenERC20.sol":2270:2275  _from */
+      dup7
+        /* "contracts/TokenERC20.sol":2260:2276  balanceOf[_from] */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      dup2
+      mstore
+      0x20
+      add
+      swap1
+      dup2
+      mstore
+      0x20
+      add
+      0x0
+      keccak256
+      0x0
+        /* "contracts/TokenERC20.sol":2260:2286  balanceOf[_from] -= _value */
+      dup3
+      dup3
+      sload
+      sub
+      swap3
+      pop
+      pop
+      dup2
+      swap1
+      sstore
+      pop
+        /* "contracts/TokenERC20.sol":2355:2361  _value */
+      dup2
+        /* "contracts/TokenERC20.sol":2337:2346  balanceOf */
+      0x4
+        /* "contracts/TokenERC20.sol":2337:2351  balanceOf[_to] */
+      0x0
+        /* "contracts/TokenERC20.sol":2347:2350  _to */
+      dup6
+        /* "contracts/TokenERC20.sol":2337:2351  balanceOf[_to] */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      dup2
+      mstore
+      0x20
+      add
+      swap1
+      dup2
+      mstore
+      0x20
+      add
+      0x0
+      keccak256
+      0x0
+        /* "contracts/TokenERC20.sol":2337:2361  balanceOf[_to] += _value */
+      dup3
+      dup3
+      sload
+      add
+      swap3
+      pop
+      pop
+      dup2
+      swap1
+      sstore
+      pop
+        /* "contracts/TokenERC20.sol":2392:2395  _to */
+      dup3
+        /* "contracts/TokenERC20.sol":2376:2404  Transfer(_from, _to, _value) */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+        /* "contracts/TokenERC20.sol":2385:2390  _from */
+      dup5
+        /* "contracts/TokenERC20.sol":2376:2404  Transfer(_from, _to, _value) */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef
+        /* "contracts/TokenERC20.sol":2397:2403  _value */
+      dup5
+        /* "contracts/TokenERC20.sol":2376:2404  Transfer(_from, _to, _value) */
+      mload(0x40)
+      dup1
+      dup3
+      dup2
+      mstore
+      0x20
+      add
+      swap2
+      pop
+      pop
+      mload(0x40)
+      dup1
+      swap2
+      sub
+      swap1
+      log3
+        /* "contracts/TokenERC20.sol":2559:2575  previousBalances */
+      dup1
+        /* "contracts/TokenERC20.sol":2541:2550  balanceOf */
+      0x4
+        /* "contracts/TokenERC20.sol":2541:2555  balanceOf[_to] */
+      0x0
+        /* "contracts/TokenERC20.sol":2551:2554  _to */
+      dup6
+        /* "contracts/TokenERC20.sol":2541:2555  balanceOf[_to] */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      dup2
+      mstore
+      0x20
+      add
+      swap1
+      dup2
+      mstore
+      0x20
+      add
+      0x0
+      keccak256
+      sload
+        /* "contracts/TokenERC20.sol":2522:2531  balanceOf */
+      0x4
+        /* "contracts/TokenERC20.sol":2522:2538  balanceOf[_from] */
+      0x0
+        /* "contracts/TokenERC20.sol":2532:2537  _from */
+      dup8
+        /* "contracts/TokenERC20.sol":2522:2538  balanceOf[_from] */
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      0xffffffffffffffffffffffffffffffffffffffff
+      and
+      dup2
+      mstore
+      0x20
+      add
+      swap1
+      dup2
+      mstore
+      0x20
+      add
+      0x0
+      keccak256
+      sload
+        /* "contracts/TokenERC20.sol":2522:2555  balanceOf[_from] + balanceOf[_to] */
+      add
+        /* "contracts/TokenERC20.sol":2522:2575  balanceOf[_from] + balanceOf[_to] == previousBalances */
+      eq
+        /* "contracts/TokenERC20.sol":2515:2576  assert(balanceOf[_from] + balanceOf[_to] == previousBalances) */
+      iszero
+      iszero
+      tag_89
+      jumpi
+      invalid
+    tag_89:
+        /* "contracts/TokenERC20.sol":1756:2583  function _transfer(address _from, address _to, uint _value) internal {... */
+      pop
+      pop
+      pop
+      pop
+      jump	// out
+
+    auxdata: 0xa165627a7a723058207197fac1377031b0cef61e61762cb1a73f88f65d991eb3446f70159d377da8b30029
+}
