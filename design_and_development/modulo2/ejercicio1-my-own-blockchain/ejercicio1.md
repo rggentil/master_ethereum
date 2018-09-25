@@ -1,6 +1,6 @@
 # Módulo 2 - Ejercicio 1 - Comunicación y Procesamiento
 
-##Construya su propia blockchain
+## Construya su propia blockchain
 
 Para este ejercicio he utilizado el cliente geth como se indica. He utilizado una VM con Ubuntu 16.04 y el ciente geth es la versión 1.8.15-stable.
 
@@ -60,7 +60,7 @@ INFO [09-11|23:43:03.218] Writing custom genesis block
 INFO [09-11|23:43:03.218] Persisted trie from memory database      nodes=1 size=150.00B time=43.771µs gcnodes=0 gcsize=0.00B gctime=0s livenodes=1 livesize=0.00B
 INFO [09-11|23:43:03.218] Successfully wrote genesis state         database=lightchaindata                                                                                                                        hash=925efa…87d5c0
 ```
-![alt geth init](my-own-blockchain/img/geth_init.png)
+![alt geth init](img/geth_init.png)
 
 Vamos a crear un par de cuentas en nuestra blockchain
 
@@ -217,7 +217,7 @@ INFO [09-12|00:16:23.612] 🔨 mined potential block                  number=4 h
 
 Tarda casi 5 minutos en empezar a minar ya que durante este rato está con la acción de generar el DAG. Posteriormente se van creando bloques rápidamente en menos de unos 10 segundos, ya que la dificultad que habíamos seleccionado era baja.
 
-![alt Minando en nuestra blockchain](my-own-blockchain/img/geth_mining.png)
+![alt Minando en nuestra blockchain](img/geth_mining.png)
 
 Dejamos de minar con `miner.stop()` y consultamos de nuevo la altura de la blockchain:
 
@@ -314,7 +314,7 @@ Podemos ver que en la instrucción de "Commit new mining work" del bloque 60 hay
 > 
 ```
 
-![alt Sending tx](my-own-blockchain/img/geth_sendtx.png)
+![alt Sending tx](img/geth_sendtx.png)
 
 ### Añadiendo nuevos peers
 
@@ -415,4 +415,4 @@ He intentado buscar información pero no he conseguido nada relevante que alclar
 
 Por últumo he usado Metamask para utilizar nuestra blockchain. Primero tenemos que conectar Metamask con localhost 8545 que es nuestra blockchain privada. Para importar las cuentas lo que he hecho es importar en MyEtherWallet el UTC json que se encuentran en keystore, para posteriormente ver ahí la clave privada, que la podremos importar en Metamask. Importo dos cuentas así y hago una transferencia en Metamask entre ellas. La transferencia no se realiza debido a que no estaba minando en geth console. Nos ponemos a minar y vemos que efectivamente nos sale el aviso de que la transferencia se ha realizado correctamente y los saldos de las cuentas se actualizan.
 
-![alt Metamask-geth](my-own-blockchain/img/metamask_geth.png)
+![alt Metamask-geth](img/metamask_geth.png)
