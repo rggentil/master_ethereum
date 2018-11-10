@@ -115,7 +115,13 @@ contract RPS is Ownable {
     bool roundInProgress;
     uint lastJackpot;
     
+
     event MyLog(bytes32 choice1, uint choice2);
+    event RoundCreated(uint roundId, uint betAmount, address indexed player1, Choice choice1); // possibility to used indexes
+    event RoundResolved(uint roundId, address winner, uint betAmount, address player1, Choice choice1, address player2, Choice choice2);
+    event Payment(address paidAddress, uint amount);
+    event LotteryPlayed(address winner, uint jackpot);
+
     
     constructor() public payable {
         maxJackpot = 6 ether;
@@ -151,6 +157,8 @@ contract RPS is Ownable {
         round.player1.choice = _choice;
         round.betAmount = msg.value;
         round.isSolo = _isSolo;
+
+        emit RoundCreated(roundCount, round.betAmount, round.player1.playerAddress, round.player1.choice);
         
         if (round.isSolo) {
             require(msg.value <= jackpot, "Bet too high");
@@ -160,8 +168,8 @@ contract RPS is Ownable {
         } else {
             gameRunning = true;
         }
-        
-        return (roundCount);
+
+        return roundCount;
         
     }
 
@@ -175,9 +183,10 @@ contract RPS is Ownable {
     function joinRound(uint _roundId, Choice _choice) public payable{
         Round storage myRound = rounds[_roundId];  // Pointer to round
         require(myRound.player1.playerAddress != address(0), "Round does not exist");
+        require(myRound.player2.playerAddress == address(0), "Round already finished");
         require(msg.value >= myRound.betAmount, "Send at least the same bet amount");
         require(!myRound.isClosed, "Round already finished");
-        msg.sender.transfer(msg.value - myRound.betAmount);  // Use Safe Math
+        msg.sender.transfer(msg.value - myRound.betAmount);  // Use Safe Math, althouth this should never be overflow bc substract uints is another uint
         
         myRound.player2.playerAddress = msg.sender;
         myRound.player2.choice = _choice;
@@ -192,6 +201,15 @@ contract RPS is Ownable {
         lastWinner = myRound.winner;
         _payWinner(_roundId);
         //roundInProgress = false;
+        emit RoundResolved(
+            _roundId,
+            myRound.winner,
+            myRound.betAmount,
+            myRound.player1.playerAddress,
+            myRound.player1.choice,
+            myRound.player2.playerAddress,
+            myRound.player2.choice
+        );
     }
     
     function _payWinner(uint _roundId) internal {  // Maybe it can return true or false for the lottery
@@ -209,6 +227,7 @@ contract RPS is Ownable {
             } else {  // Player wins
                 jackpot -= myRound.betAmount;
                 winner.transfer(2 * myRound.betAmount);
+                emit Payment(winner, myRound.betAmount);
             }
         } else { // 2 players mode
             if (winner == address(0)){  // Draw, players receive what they bet
@@ -216,8 +235,10 @@ contract RPS is Ownable {
                 myRound.player2.playerAddress.transfer(myRound.betAmount);
             } else {  // Bet to the winner
                 winner.transfer(2 * myRound.betAmount);
+                emit Payment(winner, myRound.betAmount);
             }
         }
+
 
     }
     

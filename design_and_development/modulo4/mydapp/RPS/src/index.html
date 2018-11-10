@@ -27,35 +27,51 @@
         </div>
       </div>
 
-      <div id="RPSRow" class="row" style="width: 550px; height: 350px; margin: 0 auto; background: darkgreen; color: rgb(201, 233, 214);">
+      <div id="RPSRow" class="row" style="width: 50%; margin: 0 auto; background: darkgreen; color: rgb(201, 233, 214);">
         <h2>Play round!</h2>
         <br/>
         <form>
           <fieldset>   
               <div >
-                  <input type="radio" id="soloPlayer"  name="playerType" value="soloPlayer" checked />
-                  <label for="huey" style="margin: 0px 20px 0px 0px">vs Jackpot</label>
-                  <input type="radio" id="newRound" name="playerType" value="newRound" />
-                  <label for="dewey" style="margin: 0px 20px 0px 0px">Create Round</label>
-                  <input type="radio" id="joinRound" name="playerType" value="joinRound" />
-                  <label for="louie" style="margin: 0px 10px 0px 0px">Join Round</label><input type="text" name="round" id="round" style="width: 60px; color:black"/>
+              <label style="margin: 0px 20px 0px 0px">
+                  <input type="radio" id="soloPlayer"  name="playerType" value="soloPlayer" checked />vs Jackpot
+              </label>
+              <label style="margin: 0px 20px 0px 0px">
+                  <input type="radio" id="newRound" name="playerType" value="newRound" />Create Round
+               </label>
+               <label style="margin: 0px 10px 0px 0px">
+                  <input type="radio" id="joinRound" name="playerType" value="joinRound" />Join Round
+                  <input type="text" name="round" id="round" style="width: 60px; color:black"/>
+                </label>
               </div>
           </fieldset>
-      </form>
-      <br/>
-        <p>Bet (ETH): </p>
-        <div class="section" style="color:black">
-          <input type="text" style="width: 60px;" name="bet" value=0.5  id="betAmount"/>
+      
+        <br/>
+        <form class="form-inline" >
+          <div class="form-group" style="margin: 0 auto; width: 20%">
+            <label class="sr-only" for="exampleInputAmount">Amount (in ethers)</label>
+            <div class="input-group">
+              <div class="input-group-addon">ETH</div>
+              <input type="text" class="form-control" name="bet" value=0.5 placeholder=0.0001 id="betAmount" style="width: 80px" required>
+              </div>
+            </div>
+        </form>
+
+        <br/>
+        <div class="btn-group" role="group">
+          <button class="btn btn-default btn-lg btn-rock" type="button">Rock</button>
+          <button class="btn btn-default btn-lg btn-paper" type="button">Paper</button>
+          <button class="btn btn-default btn-lg btn-scissors" type="button">Scissors</button>
         </div>
-        <br/>
-        <button class="btn btn-default btn-lg btn-rock" type="button" data-id="0">Rock</button>
-        <button class="btn btn-default btn-lg btn-paper" type="button" data-id="0">Paper</button>
-        <button class="btn btn-default btn-lg btn-scissors" type="button" data-id="0">Scissors</button>
-        <br/>
-        <br/>
+        </form>
+      <br/>
+      <br/>
+      
         <div id="jackpot"></div>
+      <br/>
       </div>
-      <div id="RPSRow" class="row" style="width: 550px; margin: 0 auto; background: whitesmoke; color: darkgreen;">
+      </br>
+      <div class="row" style="width: 50%; margin: 0 auto; background: whitesmoke; color: darkgreen;">
         <h2>
           <div id="result"></div>
         </h2>
@@ -69,6 +85,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
     <script src="js/web3.min.js"></script>
     <script src="js/truffle-contract.js"></script>
     <script src="js/app.js"></script>

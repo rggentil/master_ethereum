@@ -17,6 +17,8 @@
   },
   "dependencies": {
     "openzeppelin-solidity": "^2.0.0",
+    "web3-eth-abi": "^1.0.0-beta.36",
+    "web3-utils": "^1.0.0-beta.36",
     "zeppelin-solidity": "^1.12.0"
   }
 }
