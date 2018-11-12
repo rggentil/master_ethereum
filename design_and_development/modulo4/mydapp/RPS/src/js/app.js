@@ -170,7 +170,7 @@ App = {
         // Execute adopt as a transaction by sending account
         return rpsInstance.getJackpot({from: account});
       }).then(function(result) {
-        document.getElementById("jackpot").innerHTML = "Current jackpot: " + web3.fromWei(result, 'ether') + ' ETH';
+        document.getElementById("jackpot-amount").innerHTML = web3.fromWei(result, 'ether') + ' ETH';
         console.log(result);
       }).catch(function(err) {
         console.log(err.message);

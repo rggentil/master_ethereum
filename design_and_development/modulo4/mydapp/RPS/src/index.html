@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>RPS</title>
+    <title>RPS P2P</title>
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
+    <!-- Fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Kumar+One+Outline|Press+Start+2P" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Spicy+Rice" rel="stylesheet"> 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -17,61 +22,130 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
+
   <body>
+
+    <style>
+
+      @font-face {
+        font-family: "York white letter";
+        src: url('fonts/yorkwhiteletter.otf');
+      }
+
+      @font-face {
+        font-family: 'Showtime';
+        src: url('fonts/Showtime.ttf');
+      }
+      
+      h1 {
+        font-family: 'Kumar One Outline', cursive;
+        font-size: 80px;
+      }
+
+      h2.play {
+        font-family: "York white letter", monospace;
+        font-size: 80px;
+        color: black;
+      }
+
+      #game-container {
+        background-color: goldenrod;
+        color: rgb(201, 233, 214);
+        width: 50%;
+        margin: 0 auto;
+      }
+
+      #jackpot {
+        margin: 30px 0 10px 0;
+        font-family: 'Showtime', monospace;
+        font-size: 50px;
+        color: black;
+      }
+
+      #jackpot-amount {
+        font-family: 'Spicy Rice', monospace;
+        font-size: 50px;
+        color: black;
+      }
+
+      .game-options {
+        margin: 10px 20px 0px 0px;
+        color: black;
+      }
+
+      .bet-amount {
+        margin: 25px auto 10px auto; 
+        width: 20%
+      }
+
+      .choice {
+        margin: 15px auto;
+      }
+
+      #result {
+        width: 50%;
+        margin: 10px auto;
+        background: whitesmoke;
+        color: darkgreen;
+      }
+
+    </style>
+
     <div class="container" style="text-align: center;">
       <div class="row">
         <div class="col-xs-12 col-sm-8 col-sm-push-2">
-          <h1 class="text-center">RPS v0</h1>
+          <h1 class="text-center">RPS v0.1</h1>
           <hr/>
           <br/>
         </div>
       </div>
 
-      <div id="RPSRow" class="row" style="width: 50%; margin: 0 auto; background: darkgreen; color: rgb(201, 233, 214);">
-        <h2>Play round!</h2>
-        <br/>
+      <div id="game-container" class="row"">
+        <h2 class="play">ÌPlay"round!Í</h2>
+
         <form>
-          <fieldset>   
-              <div >
-              <label style="margin: 0px 20px 0px 0px">
-                  <input type="radio" id="soloPlayer"  name="playerType" value="soloPlayer" checked />vs Jackpot
-              </label>
-              <label style="margin: 0px 20px 0px 0px">
-                  <input type="radio" id="newRound" name="playerType" value="newRound" />Create Round
-               </label>
-               <label style="margin: 0px 10px 0px 0px">
-                  <input type="radio" id="joinRound" name="playerType" value="joinRound" />Join Round
-                  <input type="text" name="round" id="round" style="width: 60px; color:black"/>
+          <div>
+            <fieldset>   
+                <div >
+                <label class="game-options">
+                    <input type="radio" id="soloPlayer"  name="playerType" value="soloPlayer" checked />vs Jackpot
                 </label>
-              </div>
-          </fieldset>
+                <label class="game-options">
+                    <input type="radio" id="newRound" name="playerType" value="newRound" />Create Round
+                </label>
+                <label class="game-options" style="margin: 10px -10px 0px 0px">
+                    <input type="radio" id="joinRound" name="playerType" value="joinRound" />Join Round
+                    <input type="text" name="round" id="round" style="width: 60px;"/>
+                  </label>
+                </div>
+            </fieldset>
+          </div>    
       
-        <br/>
-        <form class="form-inline" >
-          <div class="form-group" style="margin: 0 auto; width: 20%">
-            <label class="sr-only" for="exampleInputAmount">Amount (in ethers)</label>
-            <div class="input-group">
-              <div class="input-group-addon">ETH</div>
-              <input type="text" class="form-control" name="bet" value=0.5 placeholder=0.0001 id="betAmount" style="width: 80px" required>
+          <div class="form-inline bet-amount" >
+            <div class="form-group">
+              <label class="sr-only" for="exampleInputAmount">Amount (in ethers)</label>
+              <div class="input-group">
+                <div class="input-group-addon">ETH</div>
+                <input type="text" class="form-control" name="bet" value=0.5 placeholder=0.0001 id="betAmount" style="width: 80px" required>
+                </div>
               </div>
-            </div>
+          </div>
+
+          <div class="btn-group choice" role="group">
+            <button class="btn btn-default btn-lg btn-rock" type="button">Rock</button>
+            <button class="btn btn-default btn-lg btn-paper" type="button">Paper</button>
+            <button class="btn btn-default btn-lg btn-scissors" type="button">Scissors</button>
+          </div>
         </form>
 
-        <br/>
-        <div class="btn-group" role="group">
-          <button class="btn btn-default btn-lg btn-rock" type="button">Rock</button>
-          <button class="btn btn-default btn-lg btn-paper" type="button">Paper</button>
-          <button class="btn btn-default btn-lg btn-scissors" type="button">Scissors</button>
-        </div>
-        </form>
-      <br/>
-      <br/>
       
-        <div id="jackpot"></div>
-      <br/>
+        <div id="jackpot">
+          (Jackpot)
+          <div id="jackpot-amount" sytle="font-family: 'Spicy Rice', cursive;"> </div>
+        </div>
       </div>
-      </br>
-      <div class="row" style="width: 50%; margin: 0 auto; background: whitesmoke; color: darkgreen;">
+
+      <div class="row">
         <h2>
           <div id="result"></div>
         </h2>
