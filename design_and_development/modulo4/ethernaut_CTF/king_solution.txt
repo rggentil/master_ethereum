@@ -1,0 +1,6 @@
+Send value from a contract that does not have fallback function. In this way the transfer function of King will always fail since our contract can't receive money. Constract a contract. It also works just sending with console, it looks like it works like a contract??
+
+contract.sendTransaction({value: web3.toWei(1.001)})
+
+
+

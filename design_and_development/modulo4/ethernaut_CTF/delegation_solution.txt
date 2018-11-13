@@ -1,0 +1,7 @@
+Use fallback to use delegatecall. Delegate call is like a lazy dude that want others to do his tasks but this implies a danger...
+
+Also the msg.sender in the function delegaged calle is the one that calls the lazy dude, not the dude.
+
+contract.sendTransaction({data: web3.sha3('pwn()').slice(0,10)})
+
+In this case calls pwn method that assigns sender to owner.

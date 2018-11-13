@@ -1,0 +1,6 @@
+// Private does not mean that you can't access in ethereum, since every node chacks all tx everyone has to be able to see everthing. The way to access from web3 is using funcion getStorageAt
+
+await web3.eth.getStorageAt(contract.address, 1, (error, result) => secret = result)
+
+contract.unlock(secret)
+
