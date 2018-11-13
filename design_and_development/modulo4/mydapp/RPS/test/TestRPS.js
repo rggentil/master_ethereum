@@ -31,7 +31,7 @@ contract("RPS", async (accounts) => {
         let rps = await RPS.deployed();
 
         // Initial fund must be 0
-        initialJackpot = await rps.getJackpot({from: accounts[1]});
+        initialJackpot = await rps.jackpot({from: accounts[1]});
         assert.equal(initialJackpot, 0);
 
         // Fund game with several contributions
@@ -46,7 +46,7 @@ contract("RPS", async (accounts) => {
         rps.fundGame({from: accounts[2], value: fund2});
         rps.fundGame({from: accounts[0], value: fund3});
 
-        currentJackpot = (await rps.getJackpot({from: accounts[0]})).toNumber();
+        currentJackpot = (await rps.jackpot({from: accounts[0]})).toNumber();
 
         assert.equal(currentJackpot, totalFund, 'Current jackpot not as expected');
     });
@@ -60,21 +60,21 @@ contract("RPS", async (accounts) => {
         // Previous fund was below minimum jackpot, then game could not be started
         try {
             await rps.startGame({from: owner});
+            assert.isOk(false, 'Game should not be ready to be started');  // It shouldn't reach this assert
         }
-        catch(e) {
-            assert.isOk(true, "Game should be not ready to be started");
-        }
+        catch(e) {}
+        assert.isFalse(await rps.gameRunning(), 'Game should not be running');
 
         // Not possible to start game if not owner
         try {
             await rps.startGame({from: accounts[1]});
+            assert.isOk(false, 'Game started from non owner');  // It shouldn't reach this assert
         }
-        catch(e) {
-            assert.isOk(true, "Game started from non owner");
-        }
+        catch(e) {}
+        assert.isFalse(await rps.gameRunning(), 'Game should not be running');
 
         // Start game after funding it
-        rps.fundGame({from: accounts[4], value: await rps.minJackpot()});
+        rps.fundGame({from: accounts[3], value: await rps.minJackpot()});
         rps.startGame({from: owner});
         assert.isTrue(await rps.gameRunning(), 'Game should be running');
     });
@@ -108,11 +108,6 @@ contract("RPS", async (accounts) => {
         }
 
         // Aditional checks to see about balance of the contract and players
-
-
-
-        
-        
     });
 
 }

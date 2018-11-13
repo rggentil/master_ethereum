@@ -2,90 +2,20 @@ pragma solidity ^0.4.25;
 
 import "zeppelin-solidity/contracts/ownership/Ownable.sol";
 
-// /**
-//  * @title Ownable
-//  * @dev The Ownable contract has an owner address, and provides basic authorization control
-//  * functions, this simplifies the implementation of "user permissions".
-//  */
-// contract Ownable {
-//     address private _owner;
-
-//     event OwnershipTransferred(
-//         address indexed previousOwner,
-//         address indexed newOwner
-//     );
-
-//     /**
-//     * @dev The Ownable constructor sets the original `owner` of the contract to the sender
-//     * account.
-//     */
-//     constructor() internal {
-//         _owner = msg.sender;
-//         emit OwnershipTransferred(address(0), _owner);
-//     }
-
-//     /**
-//     * @return the address of the owner.
-//     */
-//     function owner() public view returns(address) {
-//         return _owner;
-//     }
-
-//     /**
-//     * @dev Throws if called by any account other than the owner.
-//     */
-//     modifier onlyOwner() {
-//         require(isOwner());
-//         _;
-//     }
-
-//     /**
-//     * @return true if `msg.sender` is the owner of the contract.
-//     */
-//     function isOwner() public view returns(bool) {
-//         return msg.sender == _owner;
-//     }
-
-//     /**
-//     * @dev Allows the current owner to relinquish control of the contract.
-//     * @notice Renouncing to ownership will leave the contract without an owner.
-//     * It will not be possible to call the functions with the `onlyOwner`
-//     * modifier anymore.
-//     */
-//     function renounceOwnership() public onlyOwner {
-//         emit OwnershipTransferred(_owner, address(0));
-//         _owner = address(0);
-//     }
-
-//     /**
-//     * @dev Allows the current owner to transfer control of the contract to a newOwner.
-//     * @param newOwner The address to transfer ownership to.
-//     */
-//     function transferOwnership(address newOwner) public onlyOwner {
-//         _transferOwnership(newOwner);
-//     }
-
-//     /**
-//     * @dev Transfers control of the contract to a newOwner.
-//     * @param newOwner The address to transfer ownership to.
-//     */
-//     function _transferOwnership(address newOwner) internal {
-//         require(newOwner != address(0));
-//         emit OwnershipTransferred(_owner, newOwner);
-//         _owner = newOwner;
-//     }
-// }
-
 
 contract RPS is Ownable {
     
-    uint jackpot;
-    uint minJackpot = 500 finney;
+    uint public jackpot;
+    uint public minJackpot = 1 ether;
+    uint mininumBet = 0.0001 ether;
+    uint public roundCount;
+    bool public gameRunning;
+
+    /* Not used yet
     uint maxJackpot;
-    uint feePercent;
-    uint feeForJackpot;
-    uint mininumBet = 1 finney;
-    address lastWinner;
+    uint businessFee;
+    uint jackpotFee;
+    */
     
     enum Choice { Rock, Paper, Scissors }
     
@@ -99,47 +29,84 @@ contract RPS is Ownable {
         Player player1;
         Player player2;
         uint betAmount;
-        Choice choice;
-        bool isClosed; // need to check round closed before paying
         address winner;
+        bool isClosed;
         bool isSolo;
     }
     
-    uint public roundCount;
     mapping(uint=>Round) rounds;
     
     // We could add another mapping to check rounds per address:
     // mapping(address=>uint[])
     
-    bool public gameRunning;
-    bool roundInProgress;
-    uint lastJackpot;
-    
+    event RoundCreated(
+        uint roundId,
+        uint betAmount, 
+        address indexed player1, 
+        Choice choice1
+    ); // possibility to used indexes
 
-    event MyLog(bytes32 choice1, uint choice2);
-    event RoundCreated(uint roundId, uint betAmount, address indexed player1, Choice choice1); // possibility to used indexes
-    event RoundResolved(uint roundId, address winner, uint betAmount, address player1, Choice choice1, address player2, Choice choice2);
+    event RoundResolved(
+        uint roundId, 
+        address winner, 
+        uint betAmount, 
+        address player1, 
+        Choice choice1, 
+        address player2, 
+        Choice choice2
+    );
+
     event Payment(address paidAddress, uint amount);
     event LotteryPlayed(address winner, uint jackpot);
 
+    modifier gameIsRunning() {
+        require(gameRunning, "Function available only when game is running");
+        _;
+    }
     
     constructor() public payable {
-        maxJackpot = 6 ether;
+        // We could handle games through constructor and setting variables like
+        // minimum bet, max jackpot, fees, etc.
+    }
+
+    // Fallback, just in case of receiving funds, to the jackpot
+    function () public payable {
+        jackpot += msg.value;
+    }
+
+    function getRoundInfo(
+        uint roundId
+    )
+        external
+        view
+        returns(
+            address player1Address,
+            Choice player1Choice,
+            address player2Address,
+            Choice player2Choice,
+            uint betAmount,
+            address winner
+        )
+    {
+        Round memory myRound = rounds[roundId];
+        return (
+            myRound.player1.playerAddress,
+            myRound.player1.choice,
+            myRound.player2.playerAddress,
+            myRound.player2.choice,
+            myRound.betAmount,
+            myRound.winner
+        );
     }
     
     function fundGame() public payable {
         jackpot += msg.value;
     }
     
-    modifier gameIsRunning() {
-        require(gameRunning, "Function available only when game is running");
-        _;
-    }
-    
     function startGame() public onlyOwner {
         require(!gameRunning, "Game already started");
-        require(jackpot <= address(this).balance, "Jackpot higher than SC balance");
-        require(address(this).balance >= minJackpot, "Minimum Jackpot is needed for starting game");
+        require(jackpot <= address(this).balance, "Jackpot lower than SC balance");  // We might omit this check
+        require((address(this).balance >= minJackpot) && (jackpot >= minJackpot), "Minimum Jackpot is needed for starting game");
         gameRunning = true;
     }
     
@@ -147,10 +114,10 @@ contract RPS is Ownable {
         public 
         gameIsRunning
         payable
-        returns(uint) {
-        // require (!roundInProgress, "Another round in progress");
+        returns(uint)
+    {
         require(msg.value >= mininumBet, "Not enough amount bet");
-        // roundInProgress = true;
+
         roundCount++;
         Round storage round = rounds[roundCount];
         round.player1.playerAddress = msg.sender;
@@ -158,49 +125,54 @@ contract RPS is Ownable {
         round.betAmount = msg.value;
         round.isSolo = _isSolo;
 
-        emit RoundCreated(roundCount, round.betAmount, round.player1.playerAddress, round.player1.choice);
+        emit RoundCreated(
+            roundCount, 
+            round.betAmount, 
+            round.player1.playerAddress, 
+            round.player1.choice
+        );
         
         if (round.isSolo) {
             require(msg.value <= jackpot, "Bet too high");
             round.player2.playerAddress = address(this);
             round.player2.choice = getRandomChoice();
-            resolveRound(roundCount);
-        } else {
-            gameRunning = true;
+            _resolveRound(roundCount);
         }
 
         return roundCount;
-        
     }
 
-    function getWinner() external view returns(address) {
-        return lastWinner;
-    }
-    
-    // Is safe enough that we provide the choice to be part of enum or maybe there
-    // is any trick to be able to provide something out of choices? May it's better to
+    // It's safe enough that we provide the choice to be part of enum or maybe there
+    // is any trick to be able to provide something out of choices? Maybe it's better to
     // add a check to see if in its range
-    function joinRound(uint _roundId, Choice _choice) public payable{
+    function joinRound(uint _roundId, Choice _choice) public payable {
         Round storage myRound = rounds[_roundId];  // Pointer to round
         require(myRound.player1.playerAddress != address(0), "Round does not exist");
-        require(myRound.player2.playerAddress == address(0), "Round already finished");
+        require(myRound.player2.playerAddress == address(0) && !myRound.isClosed, "Round already finished");
         require(msg.value >= myRound.betAmount, "Send at least the same bet amount");
-        require(!myRound.isClosed, "Round already finished");
-        msg.sender.transfer(msg.value - myRound.betAmount);  // Use Safe Math, althouth this should never be overflow bc substract uints is another uint
+
+        // Send back the excess of the amount sent minus the real bet amount
+        // Use Safe Math, althouth this should never be overflow bc substract uints is another uint
+        // Using transfer should prevent from fallback reentrancy, but...
+        // Also, a reentrancy would have to send more value than betAmount, I think an attack has no sense
+        // but I would have to analyze it a bit more.
+        msg.sender.transfer(msg.value - myRound.betAmount);  
         
         myRound.player2.playerAddress = msg.sender;
         myRound.player2.choice = _choice;
-        resolveRound(_roundId);
+        _resolveRound(_roundId);
     }
     
-    function resolveRound(uint _roundId) internal {
+    // Change randomness in case we want it to be realistic. Probably it needs Oraclize.
+    function getRandomChoice() internal view returns(Choice){
+        return Choice(uint(blockhash(block.number - 1)) % 3);
+    }
+
+    function _resolveRound(uint _roundId) private {
         Round storage myRound = rounds[_roundId];  // Pointer to round
         require(!myRound.isClosed, "Round already closed");
-        myRound.isClosed = true;
         myRound.winner = _checkWinner(myRound.player1, myRound.player2);
-        lastWinner = myRound.winner;
         _payWinner(_roundId);
-        //roundInProgress = false;
         emit RoundResolved(
             _roundId,
             myRound.winner,
@@ -212,17 +184,26 @@ contract RPS is Ownable {
         );
     }
     
-    function _payWinner(uint _roundId) internal {  // Maybe it can return true or false for the lottery
+    function _payWinner(uint _roundId) private {  // Maybe it can return true or false for the lottery
         // We might want to add some checkers, requires or asserts, to see that the value 
         // trasnfered is what it is...
+
         Round storage myRound = rounds[_roundId];  // Pointer to round
         address winner = myRound.winner;
         
+        // I think this is necessary to avoid possible reentrancy attacks (although we're using transfer).
+        // I also think we are protected since this function is private, the one which calls this one is
+        // also private and the parent you need to send value to join round.
+        require(!myRound.isClosed, "Round already closed");
+        myRound.isClosed = true;
+
+        uint inititalJackpot = jackpot;
+        uint initialBalance = address(this).balance;
+
         if(myRound.isSolo) {  // 1 player mode
             if (winner == address(0)){  // Draw, player recevies what he bet
                 myRound.player1.playerAddress.transfer(myRound.betAmount);
-            }
-            else if (winner == address(this)) {  // Player looses, bet to jackpot
+            } else if (winner == address(this)) {  // Player looses, bet to jackpot
                 jackpot += myRound.betAmount;  
             } else {  // Player wins
                 jackpot -= myRound.betAmount;
@@ -239,12 +220,10 @@ contract RPS is Ownable {
             }
         }
 
-
-    }
-    
-    // Change randomness in case we want it to be realistic. Probably it needs Oraclize.
-    function getRandomChoice() internal view returns(Choice){
-        return Choice(uint(blockhash(block.number - 1)) % 3);
+        // Additional check por security for reentrancy (kind of formal verification)
+        // These additional checks may not be necessary since we are using transfer that limits gas to 2300, 
+        // so in the final deployment we could ommit all these additional checks in order to save same uncessary gas
+        assert((jackpot >= inititalJackpot - (2 * myRound.betAmount)) && (address(this).balance >= initialBalance - (2 * myRound.betAmount))); 
     }
     
     function _checkWinner(Player player1, Player player2) private pure returns(address) {
@@ -255,46 +234,6 @@ contract RPS is Ownable {
         } else {
             return address(0);
         }
-    }
-
-    function getBCChoice() external view returns(uint) {
-        return uint(blockhash(block.number - 1)) % 3;
-    }
-    
-    
-    function getJackpot() external view returns(uint) {
-        return jackpot;
-    }
-    
-    function getBalance() external view returns(uint) {
-        return address(this).balance;
-    }
-    
-    function getRoundInfo(
-        uint roundId
-    )
-        external
-        view
-        returns(
-            address player1Address,
-            Choice player1Choice,
-            address player2Address,
-            Choice player2Choice,
-            uint betAmount,
-            address winner,
-            uint blockNumber
-        )
-    {
-        Round memory myRound = rounds[roundId];
-        return (
-            myRound.player1.playerAddress,
-            myRound.player1.choice,
-            myRound.player2.playerAddress,
-            myRound.player2.choice,
-            myRound.betAmount,
-            myRound.winner,
-            block.number - 1
-        );
     }
     
     // Careful to call this function only when there is no round without result

@@ -168,7 +168,7 @@ App = {
         rpsInstance = instance;
 
         // Execute adopt as a transaction by sending account
-        return rpsInstance.getJackpot({from: account});
+        return rpsInstance.jackpot({from: account});
       }).then(function(result) {
         document.getElementById("jackpot-amount").innerHTML = web3.fromWei(result, 'ether') + ' ETH';
         console.log(result);
