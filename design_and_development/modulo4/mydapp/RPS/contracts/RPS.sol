@@ -7,7 +7,7 @@ contract RPS is Ownable {
     
     uint public jackpot;
     uint public minJackpot = 1 ether;
-    uint mininumBet = 0.0001 ether;
+    uint public minimumBet = 0.0001 ether;
     uint public roundCount;
     bool public gameRunning;
 
@@ -116,7 +116,7 @@ contract RPS is Ownable {
         payable
         returns(uint)
     {
-        require(msg.value >= mininumBet, "Not enough amount bet");
+        require(msg.value >= minimumBet, "Not enough amount bet");
 
         roundCount++;
         Round storage round = rounds[roundCount];
