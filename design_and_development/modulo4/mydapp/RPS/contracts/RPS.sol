@@ -41,18 +41,18 @@ contract RPS is Ownable {
     
     event RoundCreated(
         uint roundId,
-        uint betAmount, 
-        address indexed player1, 
+        uint betAmount,
+        address indexed player1,
         Choice choice1
     ); // possibility to used indexes
 
     event RoundResolved(
-        uint roundId, 
-        address winner, 
-        uint betAmount, 
-        address player1, 
-        Choice choice1, 
-        address player2, 
+        uint roundId,
+        address winner,
+        uint betAmount,
+        address indexed player1,
+        Choice choice1,
+        address player2,
         Choice choice2
     );
 
