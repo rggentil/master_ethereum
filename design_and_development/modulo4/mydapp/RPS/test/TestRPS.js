@@ -74,6 +74,7 @@ contract("RPS", async (accounts) => {
         }
         catch(e) {}
         assert.isFalse(await rps.gameRunning(), 'Game should not be running');
+        assert.isFalse(await rps.lotteryOn(), 'Lottery should not be on');
 
         // Not possible to start game if not owner
         try {
@@ -86,6 +87,7 @@ contract("RPS", async (accounts) => {
             rps.fundGame({from: accounts[3], value: await rps.minJackpot()});
             rps.startGame({from: owner});
             assert.isTrue(await rps.gameRunning(), 'Game should be running');
+            assert.isTrue(await rps.lotteryOn(), 'Lottery should not be on');
 
             return;
         }
@@ -103,6 +105,8 @@ contract("RPS", async (accounts) => {
         const betAmount = web3.toWei(0.1);
         let expectedPlayersBalance;
         let expectedContractsBalance;
+
+        rps.stopLottery({from: owner});
 
         // Try several attemps to assure that passing the test is not because of a random gess.
         // Maybe final version redouce the attemps to get lower unit test time.
@@ -138,6 +142,8 @@ contract("RPS", async (accounts) => {
             assert.closeTo(newPlayersBalance, expectedPlayersBalance, fees, 'Player balance is wrong after round vs House');
             assert.equal(newContractsBalance, expectedContractsBalance, 'House balance is wrong after round vs House');
         }
+
+        rps.startLottery({from: owner});
     });
 
     it("Test getting info from round (vs House)", async () => {
@@ -158,6 +164,7 @@ contract("RPS", async (accounts) => {
 
     it("Playing 2 players", async () => {
 
+        rps.stopLottery({from: owner});
         const betAmount = web3.toWei(0.1);
 
         // Try several attemps to assure that passing the test is not because of a random gess.
@@ -192,7 +199,10 @@ contract("RPS", async (accounts) => {
             }
 
             assert.closeTo(newPlayer1sBalance, expectedPlayer1sBalance, fees, 'Player1 balance is wrong after round vs Player2');
-            assert.closeTo(newPlayer2sBalance, expectedPlayer2sBalance, fees, 'Player2 balance is wrong after round vs Player2');        }
+            assert.closeTo(newPlayer2sBalance, expectedPlayer2sBalance, fees, 'Player2 balance is wrong after round vs Player2');
+        }
+
+        rps.startLottery({from: owner});
     });
 
     it("Test getting info from round (2 players)", async () => {
@@ -326,6 +336,55 @@ contract("RPS", async (accounts) => {
 
         assert.isOk(false, 'It should not be possibe to join to a round with lower bet');  // It shouldn't reach this assert
     });
+
+    it("Test play lottery (playing vs House)", async () => {
+        rps.startLottery({from: owner});
+
+        // I can set a new lottery rate
+        const newLotteryRate = 5;
+        await rps.setLotteryRate(newLotteryRate);
+        assert.equal(newLotteryRate, await rps.lotteryRate());
+
+        const roundsNumber = 50;
+        const betAmount = web3.toWei(0.11);
+
+        let lotteryWinner;
+        let jackpot;
+        let previousPlayersBalance;
+
+        // The idea is to modify the number of rounds and chance of winning to assure that there is a big change of winning
+        // lottery, so we can get an event of winning lottery.
+        for (i of [...Array(roundsNumber).keys()]) {
+            previousPlayersBalance = (await web3.eth.getBalance(player1.address)).toNumber();
+
+            jackpot = (await rps.jackpot()).toNumber();
+
+            result = await rps.createRound(true, player1.choice, {from: player1.address, value: betAmount});
+            let lastRound = await rps.roundCount();
+            roundInfo =  await rps.getRoundInfo(lastRound);
+
+            // Depending on winning or losing round, LotteryWin event is 2nd or 3rd.
+            if (result.logs[2] && (result.logs[2].event == "LotteryWin")) {
+                lotteryWinner = result.logs[2].args.winner;
+                break;
+            } else if (result.logs[3] && (result.logs[3].event == "LotteryWin")) {
+                lotteryWinner = result.logs[3].args.winner;
+                break;
+            }
+        }
+
+        const probalityOfWinning = 1 - ((newLotteryRate - 1) / newLotteryRate) ** roundsNumber;
+
+        assert.isOk(lotteryWinner, "Probabilistic, there should exist a winner (" + probalityOfWinning * 100 + "%)");
+
+        const fees =  parseInt(web3.toWei(0.05));  // Gas fees, adjust when we know better about gas cost
+        const newLotteryWinnerBalance = (await web3.eth.getBalance(lotteryWinner)).toNumber();
+        const expectedLotteryWinnerBalance = previousPlayersBalance + jackpot;
+        const contractsBalance = (await web3.eth.getBalance(rps.address)).toNumber();
+        assert.closeTo(expectedLotteryWinnerBalance, newLotteryWinnerBalance, fees, 'Lottery winner balance is wrong');
+        assert.closeTo(0, contractsBalance, parseInt(betAmount) * 2, 'Contract balance should be close to 0');
+    });
+
 }
 
 )

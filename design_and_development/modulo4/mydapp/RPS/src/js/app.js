@@ -28,6 +28,7 @@ App = {
       App.contracts.RPS.setProvider(App.web3Provider);
 
       App.showJackpot();
+      App.showPlayerAddress();
       App.manageGameEvents();
 
     });
@@ -73,6 +74,22 @@ App = {
     rpsInstance = await App.contracts.RPS.deployed();
     const jackpot = await rpsInstance.jackpot();
     document.getElementById("jackpot-amount").innerHTML = web3.fromWei(jackpot, 'ether') + ' ETH';
+  },
+
+  showPlayerAddress: async() => {
+
+    const showAddress = () => {
+      web3.eth.getAccounts(async (error, accounts) => {
+        account = await accounts[0];
+        document.getElementById("metamask-player").innerHTML = account;
+      });
+    }
+
+    showAddress();
+
+    web3.currentProvider.publicConfigStore.on('update', () => {
+      showAddress();
+    });
   },
 
   playRound: (choice) => {
