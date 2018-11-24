@@ -14,7 +14,9 @@
     <!-- Fonts-->
     <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Kumar+One+Outline|Press+Start+2P" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Spicy+Rice" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css?family=Spicy+Rice" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Kaushan+Script" rel="stylesheet">
+
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -27,6 +29,9 @@
 
     <style>
 
+      body {
+          background-image: url("images/rps_background3.jpg");
+      }
       @font-face {
         font-family: "York white letter";
         src: url('fonts/yorkwhiteletter.otf');
@@ -36,124 +41,334 @@
         font-family: 'Showtime';
         src: url('fonts/Showtime.ttf');
       }
-      
-      h1 {
-        font-family: 'Kumar One Outline', cursive;
-        font-size: 80px;
-      }
-
-      h2.play {
-        font-family: "York white letter", monospace;
-        font-size: 80px;
-        color: black;
-      }
-
-      #game-container {
-        background-color: goldenrod;
-        color: rgb(201, 233, 214);
-        width: 50%;
-        margin: 0 auto;
-      }
 
       #jackpot {
-        margin: 30px 0 10px 0;
-        font-family: 'Showtime', monospace;
-        font-size: 50px;
+        align-self: center;
+        font-family:  "York white letter", monospace;
+        font-size: 80px;
         color: black;
+        opacity: 0.7;
+        text-transform: uppercase;
+        width:45%;
+        border: 3px solid transparent;
+        border-radius: 60%;
+        background: hsl(47, 96%, 80%);
+      }
+
+      #jackpot:hover {
+        transform: scale(1.1);
+        animation-name: colorful;
+        animation-duration: 3s;
+        animation-fill-mode: forwards;
+        animation-iteration-count: infinite;
+      }
+
+      @keyframes colorful {
+        0% {
+          background-color: gold;
+        }
+        50% {
+          background-color: hsl(47, 96%, 80%);
+          top: 50px;
+        }
+        100% {
+          background-color: gold;
+        }
       }
 
       #jackpot-amount {
-        font-family: 'Spicy Rice', monospace;
-        font-size: 50px;
+        font-family: 'URW Chancery L', cursive;
+        font-weight: bolder;
+        font-size: 40px;
         color: black;
       }
 
       .game-options {
         margin: 10px 20px 0px 0px;
         color: black;
+        font-size: 18px;
+        font-family: 'URW Gothic L', monospace;
       }
 
       .bet-amount {
-        margin: 25px auto 10px auto; 
+        margin: 25px auto 10px auto;
         width: 20%
-      }
-
-      .choice {
-        margin: 15px auto;
       }
 
       #result {
         width: 50%;
-        margin: 10px auto;
-        background: whitesmoke;
-        color: darkgreen;
+        margin: 30px auto 0px auto;
+        background: transparent;
+        color: rgb(22, 26, 7);
+        font-size: 28px;
+        border: 5px solid darkcyan;
+        border-radius: 10px;
+        background: lightcyan;
+        font-family: 'Kaushan Script', cursive;
       }
 
+      #game-container {
+        background-color: goldenrod;
+        width: 100%;
+        padding: 20px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+        display: flex;
+        flex-direction: column;
+        grid-area: "game-container";
+        border: 9px solid darkcyan;
+        border-radius: 20px;
+      }
+
+      #console {
+        margin: auto 20px;
+        background-color: grey;
+        align-self: center;
+        order: 2;
+      }
+
+      #box-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+      }
+
+      header {
+        display: grid;
+        grid-template-columns: 1fr 2fr 1fr;
+      }
+
+      #game-title {
+        font-family: 'Showtime', monospace;
+        font-size: 120px;
+        color: darkcyan;
+        text-align: center;
+      }
+
+      .player {
+        text-align: right;
+        font-size: 20px;
+        margin: 20px;
+        font-family: "URW Gothic L";
+        padding: 25px 50px;
+        font-weight: bold;
+      }
+
+      .main-container {
+        width: 100%;
+        display: grid;
+        margin: 10px auto;
+        grid-template-columns: 1fr 2fr 1fr;
+        grid-template-rows: 1fr auto;
+        grid-template-areas:
+          "instructions game-container history"
+          "instructions result history";
+        grid-gap: 10px;
+      }
+
+      #history {
+        grid-area: "history";
+        justify-self: right;
+      }
+
+      .info-container {
+        border: 6px solid goldenrod;
+        border-radius: 20px;
+        justify-self: center;
+        font-family: "URW Gothic L";
+        background: lightcyan;
+        width: 80%;
+        padding: 10px;
+        font-size: 20px;
+      }
+
+      #instructions {
+        grid-area: "advert";
+      }
+
+      footer {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-family: "URW Gothic L";
+        font-size: 16px;
+      }
+
+      .table-history {
+        font-size: 12px;
+      }
+
+      caption {
+        text-align: center;
+        font-weight: bold;
+        font-size: 20px;
+        color: black
+      }
+
+
+      .table-wrap {
+        height: 250px;
+        overflow-y: auto;
+      }
+
+      .choice {
+        margin: 30px auto;
+      }
+
+      button {
+        height: 170px;
+        width: 170px;
+        outline: none;
+        font-family: "URW Chancery L", cursive;
+        background-size: 170px 170px;
+        margin: auto 30px;
+      }
+
+      .btn-rock {
+        background-image: url( 'images/rock.png' );
+        background-color: transparent;
+      }
+
+      .btn-paper {
+        background-image: url( 'images/paper.png' );
+        background-color: transparent;
+      }
+
+      .btn-scissors {
+        background-image: url( 'images/scissors.png' );
+        background-color: transparent;
+      }
+
+      .btn-choice {
+        border: 3px solid darkcyan;
+        border-radius: 20px;
+        background-color:hsl(47, 96%, 80%);
+        font-size: 25px;
+        font-weight: bold;
+      }
+
+      .btn-choice:hover {
+        background-color:hsl(47, 83%, 57%);
+        font-weight: bolder;
+        transform: scale(1.08);
+      }
     </style>
 
-    <div class="container" style="text-align: center;">
-      <div class="row">
-        <div class="col-xs-12 col-sm-8 col-sm-push-2">
-          <h1 class="text-center">RPS v0.1</h1>
+    <header>
+      <div></div>
+      <div id="game-title">(RPS-P2P)</div>
+      <div class="player">
+        <p>Player:<div id="metamask-player"></div>
+        </p>
+      </div>
+    </header>
+
+
+    <main>
+      <div class="main-container">
+
+        <div id="instructions" class="info-container">
+          <ul>
+            <li><b>Rock</b> crushes Scissors</li>
+            <li><b>Paper</b> covers Rock</li>
+            <li><b>Scissors</b> cuts Paper</li>
+          </ul>
           <hr/>
-          <br/>
+          <ul>
+            Two types of games:
+            <li>Play vs House (aka Smartcontract)</li>
+            <li>Play vs other player (create or join to an existing round)</li>
+          </ul>
+          <hr/>
+          <ul>
+            <li>Winning round: <b>earn x1.98</b></li>
+            <li>Draw: loose <b>1%</b></li>
+            <li>Loosing round: <b>loose all</b></li>
+          </ul>
+          <hr/>
+          <p >When playing vs House you're playing for the Jackpot. Current chance of winning is 0.01%</p>
         </div>
-      </div>
+        <div id="game-container" class="text-center">
 
-      <div id="game-container" class="row"">
-        <h2 class="play">ÌPlay"round!Í</h2>
-
-        <form>
-          <div>
-            <fieldset>   
-                <div >
-                <label class="game-options">
-                    <input type="radio" id="soloPlayer"  name="playerType" value="soloPlayer" checked />vs Jackpot
-                </label>
-                <label class="game-options">
-                    <input type="radio" id="newRound" name="playerType" value="newRound" />Create Round
-                </label>
-                <label class="game-options" style="margin: 10px -10px 0px 0px">
-                    <input type="radio" id="joinRound" name="playerType" value="joinRound" />Join Round
-                    <input type="text" name="round" id="round" style="width: 60px;"/>
-                  </label>
-                </div>
+          <form>
+            <fieldset>
+                <input type="radio" id="soloPlayer"  name="playerType" value="soloPlayer" checked />
+                <label class="game-options" for="soloPlayer">vs House</label>
+                <input type="radio" id="newRound" name="playerType" value="newRound" />
+                <label class="game-options" for="newRound">Create Round</label>
+                <input type="radio" id="joinRound" name="playerType" value="joinRound" />
+                <label class="game-options" for="joinRound">Join Round</label>
+                <input type="text" name="round" id="round" style="width: 60px; margin: 0px 0px 0px -20px; background-color:hsl(47, 96%, 88%);"/>
             </fieldset>
-          </div>    
-      
-          <div class="form-inline bet-amount" >
-            <div class="form-group">
-              <label class="sr-only" for="exampleInputAmount">Amount (in ethers)</label>
-              <div class="input-group">
-                <div class="input-group-addon">ETH</div>
-                <input type="text" class="form-control" name="bet" value=0.5 placeholder=0.0001 id="betAmount" style="width: 80px" required>
+
+            <div class="form-inline bet-amount" >
+              <div class="form-group">
+                <label class="sr-only" for="betAmount">Amount (in ethers)</label>
+                <div class="input-group">
+                  <div class="input-group-addon">ETH</div>
+                  <input type="text" class="form-control" name="bet" value=0.5 placeholder=0.0001 id="betAmount" style="width: 80px; background-color:hsl(47, 96%, 88%);" required>
+                  </div>
                 </div>
-              </div>
+            </div>
+
+            <div class="choice">
+              <button class="btn btn-choice btn-rock" type="button">Rock</button>
+              <button class="btn btn-choice btn-paper" type="button">Paper</button>
+              <button class="btn btn-choice btn-scissors" type="button">Scissors</button>
+            </div>
+          </form>
+
+
+          <div id="jackpot">ÌjackpotÍ<div id="jackpot-amount"></div>
           </div>
 
-          <div class="btn-group choice" role="group">
-            <button class="btn btn-default btn-lg btn-rock" type="button">Rock</button>
-            <button class="btn btn-default btn-lg btn-paper" type="button">Paper</button>
-            <button class="btn btn-default btn-lg btn-scissors" type="button">Scissors</button>
+          <div id="result-container">
+            <div id="result"></div>
           </div>
-        </form>
-
-      
-        <div id="jackpot">
-          (Jackpot)
-          <div id="jackpot-amount" sytle="font-family: 'Spicy Rice', cursive;"> </div>
-        </div>
       </div>
 
-      <div class="row">
-        <h2>
-          <div id="result"></div>
-        </h2>
+      <div class="history info-container">
+
+          <table class="table table-history table-hover" id="last-rounds-table">
+            <caption>Last rounds:</caption>
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Player 1</th>
+                <th scope="col">Player 2</th>
+                <th scope="col">Bet</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        <hr/>
+        <div class="table-wrap">
+          <table class="table table-history table-hover" table id="opened-rounds-table">
+            <caption>Opened rounds:</caption>
+            <thead class="thead-light" >
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Player 1</th>
+                <th scope="col">Bet</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+          </div>
       </div>
-      </div>
-      <br/>
-      <br/>
     </div>
+    </main>
+
+    <footer>
+      <div>
+        <a href="https://github.com/rggentil/master_ethereum/tree/master/design_and_development/modulo4/mydapp/RPS" title="source code of RPS P2P" target="_blank">
+          <img src="images/GitHub-Mark-32px.png" width=25px height=25x>
+        </a>
+      </div>
+      <div style="margin: 10px">Donate: <b>0x5a35AF8F8b4283cF6a6407852D8BdAB19456C118</b></div>
+    </footer>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

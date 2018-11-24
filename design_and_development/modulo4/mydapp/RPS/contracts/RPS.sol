@@ -48,8 +48,8 @@ contract RPS is Ownable {
         uint roundId,
         uint betAmount,
         address indexed player1,
-        Choice choice1
-    ); // possibility to used indexes
+        bool isSolo
+    );
 
     event RoundResolved(
         uint roundId,
@@ -144,7 +144,7 @@ contract RPS is Ownable {
             roundCount,
             round.betAmount,
             round.player1.playerAddress,
-            round.player1.choice
+            round.isSolo
         );
 
         if (round.isSolo) {
@@ -262,6 +262,7 @@ contract RPS is Ownable {
         }
     }
 
+    // Mostly for testing porpuse.
     function setLotteryRate(uint newLotteryRate) public onlyOwner {
         lotteryRate = newLotteryRate;
     }

@@ -1,4 +1,5 @@
 App = {
+
   web3Provider: null,
   contracts: {},
 
@@ -30,7 +31,6 @@ App = {
       App.showJackpot();
       App.showPlayerAddress();
       App.manageGameEvents();
-
     });
 
     return App.bindEvents();
@@ -54,19 +54,60 @@ App = {
     web3.eth.getAccounts(async (error, accounts) => {
       account = await accounts[0];
 
-      rpsInstance.RoundCreated({player1: account}).watch((error, result) => {
-            if (!error)
-              console.log('Event "RoundCreated" ' + result.args.roundId.toNumber() + ' received for player');
-              // console.log(result.args);
-      });
+      // rpsInstance.RoundCreated({player1: account}).watch((error, result) => {
+      //       if (!error)
+      //         console.log('Event "RoundCreated" ' + result.args.roundId.toNumber() + ' received for player');
+      // });
 
       rpsInstance.RoundResolved({player1: account}
       ).watch((error, result) => {
           if (!error)
             console.log('Event "RoundResolved" ' + result.args.roundId.toNumber() + ' received for player');
-            // console.log(result.args);
             App.showResult(result.args.roundId, result.args.winner);
       });
+
+      rpsInstance.allEvents({fromBlock: 0}
+      ).get((error, events) => {
+          if (!error)
+            roundResolvedEvents = events.filter(e => e.event == "RoundResolved");
+            resolvedRounds = roundResolvedEvents.map(e => e.args.roundId.toNumber());
+            console.log(resolvedRounds);
+            roundCreatedEvents = events.filter(e => e.event == "RoundCreated");
+            openedRounds = roundCreatedEvents.filter(e => !(resolvedRounds.includes(e.args.roundId.toNumber())));
+            App.populateHistoryTable(roundResolvedEvents.map(e => e.args));
+            App.populateOpenedRoundsTable(openedRounds.map(e => e.args))
+      }
+      );
+
+      // This is necessary because with TestRPC blockchain we receive the events twice
+      web3.eth.getBlockNumber((error, latestBlock) => {
+        rpsInstance.RoundResolved({fromBlock: latestBlock}
+        ).watch((error, event) => {
+          if (!error) {
+            if(event.blockNumber != latestBlock) {   //accept only new events
+              latestBlock = latestBlock + 1;   //update the latest blockNumber
+              App.populateHistoryTable([event.args]);
+              App.deleteRoundOpenedTable(event.args.roundId);
+            }
+          }
+        });
+      });
+
+      // This is necessary because with TestRPC blockchain we receive the events twice
+      web3.eth.getBlockNumber((error, latestBlock) => {
+        rpsInstance.RoundCreated({fromBlock: latestBlock}
+        ).watch((error, event) => {
+          if (!error) {
+            if(event.blockNumber != latestBlock) {   //accept only new events
+              latestBlock = latestBlock + 1;   //update the latest blockNumber
+              if (!event.args.isSolo) {
+                App.populateOpenedRoundsTable([event.args]);
+              }
+            }
+          }
+        });
+      });
+
     });
   },
 
@@ -81,7 +122,8 @@ App = {
     const showAddress = () => {
       web3.eth.getAccounts(async (error, accounts) => {
         account = await accounts[0];
-        document.getElementById("metamask-player").innerHTML = account;
+        accountShorted = account.slice(0, 6) + '...' + account.slice(-4);
+        document.getElementById("metamask-player").innerHTML = accountShorted;
       });
     }
 
@@ -160,6 +202,113 @@ App = {
       console.log(result);
       document.getElementById("result").innerHTML = `Round ${roundId}: ${result}`;
     });
+  },
+
+  populateHistoryTable: async (roundsData) => {
+
+    rpsInstance = await App.contracts.RPS.deployed();
+
+    rpsChoices = {0: "R", 1: "P", 2: "S"};
+
+    web3.eth.getAccounts(async (error, accounts) => {
+      account = await accounts[0];
+
+      getPlayerString = (address, choice, winner) => {
+        addressString = address.slice(0, 6) + "..";
+        if (address == account) {
+          playerString = "YOU" + " - " + rpsChoices[choice];
+        } else if (address == rpsInstance.address){
+          playerString = "House" + " - " + rpsChoices[choice];
+        }
+         else {
+          playerString = addressString + " - " + rpsChoices[choice];
+        }
+
+        if (address == winner) {
+          playerString = playerString.bold();
+        }
+        return playerString;
+      }
+
+      let table = document.getElementById("last-rounds-table");
+
+      for(var i = 0; i < roundsData.length; i++) {
+        // create a new row
+        historyData = [
+          roundsData[i].roundId,
+          getPlayerString(roundsData[i].player1, roundsData[i].choice1, roundsData[i].winner),
+          getPlayerString(roundsData[i].player2, roundsData[i].choice2, roundsData[i].winner),
+          web3.fromWei(roundsData[i].betAmount)
+          ];
+        var newRow = table.insertRow(1);
+
+        if (table.rows.length >= 8) {
+          table.deleteRow(7);
+        }
+
+        for(var j = 0; j < historyData.length; j++) {
+            // create a new cell
+            var cell = newRow.insertCell(j);
+            // add value to the cell
+            cell.innerHTML = historyData[j];
+        }
+      }
+    });
+  },
+
+  populateOpenedRoundsTable: async (roundsData) => {
+
+    rpsInstance = await App.contracts.RPS.deployed();
+
+    web3.eth.getAccounts(async (error, accounts) => {
+      account = await accounts[0];
+
+      getPlayerString = (address) => {
+        addressString = address.slice(0, 6) + "..";
+        if (address == account) {
+          playerString = "YOU";
+        } else {
+          playerString = addressString;
+        }
+
+
+        return playerString;
+      }
+
+      let table = document.getElementById("opened-rounds-table");
+
+      for(var i = 0; i < roundsData.length; i++) {
+        // create a new row
+        historyData = [
+          roundsData[i].roundId,
+          getPlayerString(roundsData[i].player1),
+          web3.fromWei(roundsData[i].betAmount)
+          ];
+        var newRow = table.insertRow(1);
+
+        // if (table.rows.length >= 8) {
+        //   table.deleteRow(7);
+        // }
+
+        for(var j = 0; j < historyData.length; j++) {
+            // create a new cell
+            var cell = newRow.insertCell(j);
+            // add value to the cell
+            cell.innerHTML = historyData[j];
+        }
+      }
+    });
+  },
+
+  deleteRoundOpenedTable: async (roundId) => {
+    let table = document.getElementById("opened-rounds-table");
+
+    for(var i = 1; i < table.rows.length; i++) {
+      if (table.rows[i].cells[0].innerHTML == roundId.toNumber()) {
+        table.deleteRow(i);
+        break;
+      }
+    }
   },
 
 };
