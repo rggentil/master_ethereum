@@ -29,8 +29,8 @@ App = {
       App.contracts.RPS.setProvider(App.web3Provider);
 
       App.showJackpot();
-      App.showPlayerAddress();
-      App.manageGameEvents();
+      App.showPlayersInfo();
+      App.manageNewEvents();
     });
 
     return App.bindEvents();
@@ -46,58 +46,39 @@ App = {
     $(document).on('click', '.btn-scissors', function(event){
       App.playRound(2);
     });
+
   },
 
-  manageGameEvents: async () => {
+  manageNewEvents: async () => {
     rpsInstance = await App.contracts.RPS.deployed();
 
     web3.eth.getAccounts(async (error, accounts) => {
       account = await accounts[0];
 
-      // rpsInstance.RoundCreated({player1: account}).watch((error, result) => {
-      //       if (!error)
-      //         console.log('Event "RoundCreated" ' + result.args.roundId.toNumber() + ' received for player');
-      // });
-
-      rpsInstance.RoundResolved({player1: account}
-      ).watch((error, result) => {
-          if (!error)
-            console.log('Event "RoundResolved" ' + result.args.roundId.toNumber() + ' received for player');
-            App.showResult(result.args.roundId, result.args.winner);
-      });
-
-      rpsInstance.allEvents({fromBlock: 0}
-      ).get((error, events) => {
-          if (!error)
-            roundResolvedEvents = events.filter(e => e.event == "RoundResolved");
-            resolvedRounds = roundResolvedEvents.map(e => e.args.roundId.toNumber());
-            console.log(resolvedRounds);
-            roundCreatedEvents = events.filter(e => e.event == "RoundCreated");
-            openedRounds = roundCreatedEvents.filter(e => !(resolvedRounds.includes(e.args.roundId.toNumber())));
-            App.populateHistoryTable(roundResolvedEvents.map(e => e.args));
-            App.populateOpenedRoundsTable(openedRounds.map(e => e.args))
-      }
-      );
-
       // This is necessary because with TestRPC blockchain we receive the events twice
       web3.eth.getBlockNumber((error, latestBlock) => {
+
         rpsInstance.RoundResolved({fromBlock: latestBlock}
         ).watch((error, event) => {
           if (!error) {
+            console.log('latest block: '+ latestBlock);
+            console.log('block number in event: ' + event.blockNumber);
             if(event.blockNumber != latestBlock) {   //accept only new events
               latestBlock = latestBlock + 1;   //update the latest blockNumber
               App.populateHistoryTable([event.args]);
               App.deleteRoundOpenedTable(event.args.roundId);
+              if (event.args.player1 == account || event.args.player2 == account) {
+                App.showResult(event.args.roundId, event.args.winner);
+              }
             }
           }
         });
-      });
 
-      // This is necessary because with TestRPC blockchain we receive the events twice
-      web3.eth.getBlockNumber((error, latestBlock) => {
         rpsInstance.RoundCreated({fromBlock: latestBlock}
         ).watch((error, event) => {
           if (!error) {
+            // console.log(latestBlock);
+            // console.log(event.blockNumber);
             if(event.blockNumber != latestBlock) {   //accept only new events
               latestBlock = latestBlock + 1;   //update the latest blockNumber
               if (!event.args.isSolo) {
@@ -117,7 +98,8 @@ App = {
     document.getElementById("jackpot-amount").innerHTML = web3.fromWei(jackpot, 'ether') + ' ETH';
   },
 
-  showPlayerAddress: async() => {
+  showPlayersInfo: async() => {
+    rpsInstance = await App.contracts.RPS.deployed();
 
     const showAddress = () => {
       web3.eth.getAccounts(async (error, accounts) => {
@@ -127,16 +109,61 @@ App = {
       });
     }
 
-    showAddress();
+    const showHistory = () => {
+      rpsInstance.allEvents({fromBlock: 0}
+        ).get((error, events) => {
+            if (!error)
+              roundResolvedEvents = events.filter(e => e.event == "RoundResolved");
+              resolvedRounds = roundResolvedEvents.map(e => e.args.roundId.toNumber());
+              roundCreatedEvents = events.filter(e => e.event == "RoundCreated");
+              openedRounds = roundCreatedEvents.filter(e => !(resolvedRounds.includes(e.args.roundId.toNumber())));
+              App.populateHistoryTable(roundResolvedEvents.map(e => e.args));
+              App.populateOpenedRoundsTable(openedRounds.map(e => e.args))
+        }
+        );
+    }
 
-    web3.currentProvider.publicConfigStore.on('update', () => {
-      showAddress();
+    const deleteRowsHistory = tableName => {
+      const myTable = document.getElementById(tableName);
+      const tableHeaderRowCount = 1;
+      const rowCount = myTable.rows.length;
+      for (let i = tableHeaderRowCount; i < rowCount; i++) {
+        myTable.deleteRow(tableHeaderRowCount);
+      }
+    }
+
+    showAddress();
+    showHistory();
+
+    // Although nicer to detect address change, following doesn't work properly, each time
+    // you click on metamask this is launched, althoug you don't change address.
+    // web3.currentProvider.publicConfigStore.on('update', () => {
+    //   showAddress();
+    //   showHistory();
+    // });
+
+    // Better, use Metamask's recommendation:
+    // https://github.com/MetaMask/faq/blob/master/DEVELOPERS.md#ear-listening-for-selected-account-changes
+    web3.eth.getAccounts(async (error, accounts) => {
+      account = await accounts[0];
+
+      var accountInterval = setInterval(function() {
+        if (web3.eth.accounts[0] !== account) {
+          account = web3.eth.accounts[0];
+
+          deleteRowsHistory('last-rounds-table');
+          deleteRowsHistory('opened-rounds-table');
+          showAddress();
+          showHistory();
+        }
+      }, 100);
     });
+
   },
 
   playRound: (choice) => {
-    document.getElementById("result").innerHTML = '';
-    console.log('playing...');
+    document.getElementById("result").innerHTML = "&nbsp;";
+
     if ($("#soloPlayer").is(":checked")) {
       console.log('playing vs Jackpot');
       App.createRound(true, choice);
@@ -160,16 +187,15 @@ App = {
       const account = await accounts[0];
 
       const result = await rpsInstance.createRound(isSolo, choice, {from: account, value: betAmount});
+      if (!isSolo) {
+        document.getElementById("result").innerHTML = `New round ${result.logs[0].args.roundId.toNumber()} created`;
+      }
       App.showJackpot();
-
-      console.log("New round created");
-      // console.log(result.logs)  // Showing events
 
     });
   },
 
   joinRound: async(roundId, choice) => {
-    console.log(`joining round ${roundId} with choice ${choice}`);
     const betAmount = web3.toWei($('#betAmount').val(), 'ether');
 
     const rpsInstance = await App.contracts.RPS.deployed();
@@ -180,8 +206,6 @@ App = {
       await rpsInstance.joinRound(roundId, choice, {from: account, value: betAmount});
       App.showJackpot();
 
-      console.log("Joined to round " + roundId);
-      console.log(result.logs)  // Showing events
     });
   },
 
@@ -199,7 +223,6 @@ App = {
         result = 'You lost!';
       }
 
-      console.log(result);
       document.getElementById("result").innerHTML = `Round ${roundId}: ${result}`;
     });
   },
@@ -271,7 +294,6 @@ App = {
           playerString = addressString;
         }
 
-
         return playerString;
       }
 
@@ -285,10 +307,6 @@ App = {
           web3.fromWei(roundsData[i].betAmount)
           ];
         var newRow = table.insertRow(1);
-
-        // if (table.rows.length >= 8) {
-        //   table.deleteRow(7);
-        // }
 
         for(var j = 0; j < historyData.length; j++) {
             // create a new cell
