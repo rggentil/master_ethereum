@@ -3,11 +3,11 @@ App = {
   web3Provider: null,
   contracts: {},
 
-  init: function() {
+  init: () =>  {
     return App.initWeb3();
   },
 
-  initWeb3: function() {
+  initWeb3: () => {
     // Is there an injected web3 instance?
     if (typeof web3 !== 'undefined') {
       App.web3Provider = web3.currentProvider;
@@ -19,10 +19,10 @@ App = {
     return App.initContract();
   },
 
-  initContract: function(event) {
-    $.getJSON('RPS.json', function(data) {
+  initContract: () => {
+    $.getJSON('RPS.json', data => {
       // Get the necessary contract artifact file and instantiate it with truffle-contract
-      var RPSArtifact = data;
+      const RPSArtifact = data;
       App.contracts.RPS = TruffleContract(RPSArtifact);
 
       // Set the provider for our contract
@@ -36,7 +36,7 @@ App = {
     return App.bindEvents();
   },
 
-  bindEvents: function() {
+  bindEvents: () => {
     $(document).on('click', '.btn-rock', function(event){
       App.playRound(0);
     });
@@ -58,11 +58,10 @@ App = {
       // This is necessary because with TestRPC blockchain we receive the events twice
       web3.eth.getBlockNumber((error, latestBlock) => {
 
+        // Handle RoundResolved events: write new entry in history tables and show round result
         rpsInstance.RoundResolved({fromBlock: latestBlock}
         ).watch((error, event) => {
           if (!error) {
-            console.log('latest block: '+ latestBlock);
-            console.log('block number in event: ' + event.blockNumber);
             if(event.blockNumber != latestBlock) {   //accept only new events
               latestBlock = latestBlock + 1;   //update the latest blockNumber
               App.populateHistoryTable([event.args]);
@@ -74,11 +73,11 @@ App = {
           }
         });
 
+        // Handle RoundCreated events: add new entry to Opened rounds table is user
+        // has created a round.
         rpsInstance.RoundCreated({fromBlock: latestBlock}
         ).watch((error, event) => {
           if (!error) {
-            // console.log(latestBlock);
-            // console.log(event.blockNumber);
             if(event.blockNumber != latestBlock) {   //accept only new events
               latestBlock = latestBlock + 1;   //update the latest blockNumber
               if (!event.args.isSolo) {
@@ -142,15 +141,16 @@ App = {
     //   showHistory();
     // });
 
-    // Better, use Metamask's recommendation:
+    // Better, use Metamask's recommendation, polling every 100 ms.
     // https://github.com/MetaMask/faq/blob/master/DEVELOPERS.md#ear-listening-for-selected-account-changes
     web3.eth.getAccounts(async (error, accounts) => {
       account = await accounts[0];
 
-      var accountInterval = setInterval(function() {
+      setInterval(() => {
         if (web3.eth.accounts[0] !== account) {
           account = web3.eth.accounts[0];
 
+          document.getElementById("result").innerHTML = "&nbsp;";
           deleteRowsHistory('last-rounds-table');
           deleteRowsHistory('opened-rounds-table');
           showAddress();
@@ -165,23 +165,20 @@ App = {
     document.getElementById("result").innerHTML = "&nbsp;";
 
     if ($("#soloPlayer").is(":checked")) {
-      console.log('playing vs Jackpot');
       App.createRound(true, choice);
     }
     else if ($("#newRound").is(":checked")) {
-      console.log('creating a new round');
       App.createRound(false, choice);
     }
     else if ($("#joinRound").is(":checked")){
-      console.log('playing vs an oponent');
       App.joinRound($('#round').val(),choice);
     }
   },
 
   createRound: async (isSolo, choice) => {
-    const betAmount = web3.toWei($('#betAmount').val(), 'ether');
-
     const rpsInstance = await App.contracts.RPS.deployed();
+
+    const betAmount = web3.toWei($('#betAmount').val(), 'ether');
 
     web3.eth.getAccounts(async (error, accounts) => {
       const account = await accounts[0];
@@ -196,9 +193,9 @@ App = {
   },
 
   joinRound: async(roundId, choice) => {
-    const betAmount = web3.toWei($('#betAmount').val(), 'ether');
-
     const rpsInstance = await App.contracts.RPS.deployed();
+
+    const betAmount = web3.toWei($('#betAmount').val(), 'ether');
 
     web3.eth.getAccounts(async (error, accounts) => {
       const account = await accounts[0];
@@ -236,7 +233,7 @@ App = {
     web3.eth.getAccounts(async (error, accounts) => {
       account = await accounts[0];
 
-      getPlayerString = (address, choice, winner) => {
+      const getPlayerString = (address, choice, winner) => {
         addressString = address.slice(0, 6) + "..";
         if (address == account) {
           playerString = "YOU" + " - " + rpsChoices[choice];
@@ -255,7 +252,7 @@ App = {
 
       let table = document.getElementById("last-rounds-table");
 
-      for(var i = 0; i < roundsData.length; i++) {
+      for(let i = 0; i < roundsData.length; i++) {
         // create a new row
         historyData = [
           roundsData[i].roundId,
@@ -263,15 +260,15 @@ App = {
           getPlayerString(roundsData[i].player2, roundsData[i].choice2, roundsData[i].winner),
           web3.fromWei(roundsData[i].betAmount)
           ];
-        var newRow = table.insertRow(1);
+        let newRow = table.insertRow(1);
 
         if (table.rows.length >= 8) {
           table.deleteRow(7);
         }
 
-        for(var j = 0; j < historyData.length; j++) {
+        for(let j = 0; j < historyData.length; j++) {
             // create a new cell
-            var cell = newRow.insertCell(j);
+            let cell = newRow.insertCell(j);
             // add value to the cell
             cell.innerHTML = historyData[j];
         }
@@ -299,18 +296,18 @@ App = {
 
       let table = document.getElementById("opened-rounds-table");
 
-      for(var i = 0; i < roundsData.length; i++) {
+      for(let i = 0; i < roundsData.length; i++) {
         // create a new row
         historyData = [
           roundsData[i].roundId,
           getPlayerString(roundsData[i].player1),
           web3.fromWei(roundsData[i].betAmount)
           ];
-        var newRow = table.insertRow(1);
+        let newRow = table.insertRow(1);
 
-        for(var j = 0; j < historyData.length; j++) {
+        for(let j = 0; j < historyData.length; j++) {
             // create a new cell
-            var cell = newRow.insertCell(j);
+            let cell = newRow.insertCell(j);
             // add value to the cell
             cell.innerHTML = historyData[j];
         }
@@ -321,7 +318,7 @@ App = {
   deleteRoundOpenedTable: async (roundId) => {
     let table = document.getElementById("opened-rounds-table");
 
-    for(var i = 1; i < table.rows.length; i++) {
+    for(let i = 1; i < table.rows.length; i++) {
       if (table.rows[i].cells[0].innerHTML == roundId.toNumber()) {
         table.deleteRow(i);
         break;
