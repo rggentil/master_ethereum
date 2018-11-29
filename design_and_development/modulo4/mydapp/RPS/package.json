@@ -1,6 +1,6 @@
 {
-  "name": "pet-shop",
-  "version": "1.0.0",
+  "name": "rps",
+  "version": "0.2.0",
   "description": "",
   "main": "truffle.js",
   "directories": {
