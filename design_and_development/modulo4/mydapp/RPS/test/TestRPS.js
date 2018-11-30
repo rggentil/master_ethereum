@@ -85,9 +85,9 @@ contract("RPS", async (accounts) => {
 
             // Start game after funding it
             rps.fundGame({from: accounts[3], value: await rps.minJackpot()});
-            rps.startGame({from: owner});
+            await rps.startGame({from: owner});
             assert.isTrue(await rps.gameRunning(), 'Game should be running');
-            assert.isTrue(await rps.lotteryOn(), 'Lottery should not be on');
+            assert.isTrue(await rps.lotteryOn(), 'Lottery should be on');
 
             return;
         }
@@ -95,7 +95,33 @@ contract("RPS", async (accounts) => {
         assert.isOk(false, 'Game started from non owner');  // It shouldn't reach this assert
     });
 
+    it("Test stop game", async () => {
+
+        // Game is started from previous tests
+        assert.isTrue(await rps.gameRunning(), 'Game should be running');
+
+        // Not possible to stop game if not owner
+        try {
+            await rps.stopGame({from: accounts[1]});
+        }
+        catch(e) {
+            assert.isTrue(await rps.gameRunning(), 'Game should be running');
+
+            // Owner can stop game
+            rps.stopGame({from: owner});
+            assert.isFalse(await rps.gameRunning(), 'Game should not be running');
+            assert.isFalse(await rps.lotteryOn(), 'Lottery should not be on');
+
+            return;
+        }
+
+        assert.isOk(false, 'Game stopped from non owner');  // It shouldn't reach this assert
+    });
+
     it("Playing vs the House", async () => {
+
+        // Make sure the game is on
+        await rps.startGame({from: owner});
 
         const house = {
             address: rps.address,
@@ -385,6 +411,74 @@ contract("RPS", async (accounts) => {
         assert.closeTo(0, contractsBalance, parseInt(betAmount) * 2, 'Contract balance should be close to 0');
     });
 
-}
+    it("Test error withdrawing when game is running", async () => {
 
+        // Game is running
+        assert.isTrue(await rps.gameRunning(), 'Game should be running');
+
+        const initialOwnerBalance = (await web3.eth.getBalance(owner)).toNumber();
+        const initialContractBalance = (await web3.eth.getBalance(rps.address)).toNumber();
+
+        const fees =  parseInt(web3.toWei(0.05));  // Gas fees, adjust when we know better about gas cost
+
+        try {
+            await rps.withdrawFunds(owner, {from: owner});
+        }
+        catch(e) {
+            assert.closeTo(initialOwnerBalance, (await web3.eth.getBalance(owner)).toNumber(), fees,
+             'Owner balance should be the same');
+
+            assert.equal(initialContractBalance, (await web3.eth.getBalance(rps.address)).toNumber(),
+             'Contract balance should be the same');
+
+            return;
+        }
+
+        assert.isOk(false, 'Unauthorized withdraw when game is running');  // It shouldn't reach this assert
+    });
+
+    it("Test error withdrawing funds when not owner", async () => {
+
+        // Stop game is necessary
+        await rps.stopGame({from: owner});
+
+        const unauthorizeUser = accounts[1];
+        const initialUserBalance = (await web3.eth.getBalance(unauthorizeUser)).toNumber();
+        const initialContractBalance = (await web3.eth.getBalance(rps.address)).toNumber();
+
+        const fees =  parseInt(web3.toWei(0.05));  // Gas fees, adjust when we know better about gas cost
+
+        try {
+            await rps.withdrawFunds(unauthorizeUser, {from: unauthorizeUser});
+        }
+        catch(e) {
+            assert.closeTo(initialUserBalance, (await web3.eth.getBalance(unauthorizeUser)).toNumber(), fees,
+             'Unauthorized user balance should be the same');
+
+            assert.equal(initialContractBalance, (await web3.eth.getBalance(rps.address)).toNumber(),
+             'Contract balance should be the same');
+
+            return;
+        }
+
+        assert.isOk(false, 'Unauthorized withdraw from non owner');  // It shouldn't reach this assert
+    });
+
+    it("Test withdraw funds", async () => {
+
+        withdrawalAddress = accounts[2];
+        const initialUserBalance = (await web3.eth.getBalance(withdrawalAddress)).toNumber();
+        const initialContractBalance = (await web3.eth.getBalance(rps.address)).toNumber();
+
+        await rps.withdrawFunds(withdrawalAddress, {from: owner});
+
+        assert.equal(initialUserBalance + initialContractBalance, (await web3.eth.getBalance(withdrawalAddress)).toNumber(),
+            'Owner user balance should be previous balance + contract balance');
+
+        assert.equal(0, (await web3.eth.getBalance(rps.address)).toNumber(),
+            'Contract balance should be 0');
+
+    });
+
+}
 )

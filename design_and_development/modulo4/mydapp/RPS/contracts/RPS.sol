@@ -1,9 +1,19 @@
 pragma solidity ^0.4.25;
 
 import "zeppelin-solidity/contracts/ownership/Ownable.sol";
+import "zeppelin-solidity/contracts/math/SafeMath.sol";
 
 
+/** @title RPS - RockPaperScissor P2P game, playing also for a jackpot.
+  * @author rggentil
+  * @notice This is just a simple game done mostly for learning solidity
+            and web3 development, do not use betting real value since
+            it has some known vulnerabilities.
+  * @dev My first smartcontract, so probably code could be improved.
+ */
 contract RPS is Ownable {
+
+    using SafeMath for uint;
 
     uint public jackpot;
     uint public minJackpot = 1 ether;
@@ -64,8 +74,11 @@ contract RPS is Ownable {
     event Payment(address paidAddress, uint amount);
     event LotteryWin(address winner, uint jackpot);
 
-    modifier gameIsRunning() {
-        require(gameRunning, "Function available only when game is running");
+    /** @dev Modifier for functions available only when game is running
+      * @param _isRunning bool to check is we need the game is running or not
+    */
+    modifier gameIsRunning(bool _isRunning) {
+        require(gameRunning == _isRunning, "Function available only when game is running");
         _;
     }
 
@@ -74,11 +87,25 @@ contract RPS is Ownable {
         // minimum bet, max jackpot, fees, etc.
     }
 
-    // Fallback, just in case of receiving funds, to the jackpot
+    /** @notice Fallback, just in case of receiving funds, to the jackpot
+    */
     function () public payable {
-        jackpot += msg.value;
+        jackpot = jackpot.add(msg.value);
     }
 
+    /** @notice Get info from rounds.
+                TODO: This function should be removed in final deployment because
+                it facilitates getting other player's choice before betting.
+      * @dev This function is implemented mainly for debugging purpose.
+             Actually getting info from front-end is managed through events.
+      * @param roundId round id number that identify a round
+      * @return player1Address address of player1
+      * @return player1Choice choice of player1
+      * @return player2Address address of player2
+      * @return player2Choice choice of player2
+      * @return betAmount amount of the bet of this round, in wei.
+      * @return winner address of the winner, it's 0x0 if not finished or draw
+    */
     function getRoundInfo(
         uint roundId
     )
@@ -104,29 +131,60 @@ contract RPS is Ownable {
         );
     }
 
+    /** @notice Payable, to fund game by adding ethers to contract and to the jackpot
+      * @dev It's just the same as fallback function.
+    */
     function fundGame() public payable {
-        jackpot += msg.value;
+        jackpot = jackpot.add(msg.value);
     }
 
-    function startGame() public onlyOwner {
-        require(!gameRunning, "Game already started");
-        require(jackpot <= address(this).balance, "Jackpot lower than SC balance");  // We might omit this check
+    /** @notice When we have everything ready owner can start game so anyone can play. Also it starts lottery.
+                Also for restarting game after having stopped it
+    */
+    function startGame() public onlyOwner gameIsRunning(false){
+        require(jackpot <= address(this).balance, "Jackpot lower than SC balance");
         require((address(this).balance >= minJackpot) && (jackpot >= minJackpot), "Minimum Jackpot is needed for starting game");
         gameRunning = true;
         lotteryOn = true;
     }
 
+    /** @notice Function for emergengies. Also it stops lottery.
+    */
+    function stopGame() public onlyOwner gameIsRunning(true){
+        gameRunning = false;
+        lotteryOn = false;
+    }
+
+    /** @notice Stop lottery (this means stop playing for jackpot)
+    */
     function stopLottery() public onlyOwner {
         lotteryOn = false;
     }
 
+    /** @notice Start lottery (this means playing for jackpot)
+    */
     function startLottery() public onlyOwner {
         lotteryOn = true;
     }
 
+    /** @notice Withdraw funds in case of an emergengy. Set jackpot to 0.
+      * @param _myAddress addres to withdraw funds to
+    */
+    function withdrawFunds(address _myAddress) public onlyOwner gameIsRunning(false) {
+        _myAddress.transfer(address(this).balance);
+        jackpot = 0;
+    }
+
+    /** @notice Function called each time we want to play.
+                Payable function thar receives the bet amount.
+      * @param _isSolo bool value that represents playing vs House/smartcontract
+                       or vs other player
+      * @param _choice choose Choice enum value: ROCK, PAPER, SCISSOR
+      * @return roundId id number that identify the round created
+     */
     function createRound(bool _isSolo, Choice _choice)
         public
-        gameIsRunning
+        gameIsRunning(true)
         payable
         returns(uint)
     {
@@ -160,10 +218,12 @@ contract RPS is Ownable {
         return roundId;
     }
 
-    // It's safe enough that we provide the choice to be part of enum or maybe there
-    // is any trick to be able to provide something out of choices? Maybe it's better to
-    // add a check to see if in its range
-    function joinRound(uint _roundId, Choice _choice) public payable {
+    /** @notice Join to an existing round created by other player
+                Payable function thar receives the bet amount.
+      * @param _roundId id number that identify the round to join
+      * @param _choice choose Choice enum value: ROCK, PAPER, SCISSOR
+     */
+    function joinRound(uint _roundId, Choice _choice) public gameIsRunning(true) payable {
         Round storage myRound = rounds[_roundId];  // Pointer to round
         require(myRound.player1.playerAddress != address(0), "Round does not exist");
         require(myRound.player2.playerAddress == address(0) && !myRound.isClosed, "Round already finished");
@@ -174,13 +234,13 @@ contract RPS is Ownable {
         // Using transfer should prevent from fallback reentrancy, but...
         // Also, a reentrancy would have to send more value than betAmount, I think an attack has no sense
         // but I would have to analyze it a bit more.
-        msg.sender.transfer(msg.value - myRound.betAmount);
+        msg.sender.transfer(msg.value - myRound.betAmount);  // No need to use SafeMath since this can't be negative
 
         myRound.player2.playerAddress = msg.sender;
         myRound.player2.choice = _choice;
         _resolveRound(_roundId);
 
-        // I need to study better how to handle lottery when playing two players. I think there could be 
+        // I need to study better how to handle lottery when playing two players. I think there could be
         // easy attacks to jackpot. Not availale for now.
         // if (lotteryOn) {
         //     _playLottery(myRound.player1.playerAddress, _roundId);
@@ -189,11 +249,20 @@ contract RPS is Ownable {
 
     }
 
-    // Change randomness in case we want it to be realistic. Probably it needs Oraclize.
+    /** @notice Funtion that generates randomness for the game, used when playing vs House and playing
+                for the jackpot. This implementation is not safe since it can be easyly attacked.
+      * @dev It uses the blockhash of the last block, with two other params but it is not safe for a gambling
+            platform. Change randomness in case we want it to be realistic. Probably it needs Oraclize.
+      * @return Choice enum value (ROCK, PAPER, SCISSOR) chosen randomly.
+    */
     function getRandomChoice() private view returns(Choice){
         return Choice(uint(keccak256(abi.encodePacked(roundCount, msg.sender, blockhash(block.number - 1)))) % 3);
     }
 
+    /** @notice Resolve round, both vs House or vs other player.
+                Pay winner if any.
+      * @param _roundId id number that identify the round to resolve
+     */
     function _resolveRound(uint _roundId) private {
         Round storage myRound = rounds[_roundId];  // Pointer to round
         require(!myRound.isClosed, "Round already closed");
@@ -210,10 +279,10 @@ contract RPS is Ownable {
         );
     }
 
-    function _payWinner(uint _roundId) private {  // Maybe it can return true or false for the lottery
-        // We might want to add some checkers, requires or asserts, to see that the value
-        // trasnfered is what it is...
-
+    /** @notice Pay winner of the round resolved.
+      * @param _roundId id number that identify the round to resolve
+     */
+    function _payWinner(uint _roundId) private {
         Round storage myRound = rounds[_roundId];  // Pointer to round
         address winner = myRound.winner;
 
@@ -230,10 +299,12 @@ contract RPS is Ownable {
             if (winner == address(0)){  // Draw, player recevies what he bet
                 myRound.player1.playerAddress.transfer(myRound.betAmount);
             } else if (winner == address(this)) {  // Player looses, bet to jackpot
-                jackpot += myRound.betAmount;
+                jackpot = jackpot.add(myRound.betAmount);
             } else {  // Player wins
-                jackpot -= myRound.betAmount;
-                winner.transfer(2 * myRound.betAmount);
+                // SafeMath is not necessary, jackpot and betAmount are uint, and the substraction can only be uint.
+                // Used to show using a Library. Consider to change it to use -, since it saves same gas.
+                jackpot = jackpot.sub(myRound.betAmount);
+                winner.transfer(myRound.betAmount.mul(2));
                 emit Payment(winner, myRound.betAmount);
             }
         } else { // 2 players mode
@@ -241,7 +312,7 @@ contract RPS is Ownable {
                 myRound.player1.playerAddress.transfer(myRound.betAmount);
                 myRound.player2.playerAddress.transfer(myRound.betAmount);
             } else {  // Bet to the winner
-                winner.transfer(2 * myRound.betAmount);
+                winner.transfer(myRound.betAmount.mul(2));
                 emit Payment(winner, myRound.betAmount);
             }
         }
@@ -252,6 +323,11 @@ contract RPS is Ownable {
         assert((jackpot >= inititalJackpot - (2 * myRound.betAmount)) && (address(this).balance >= initialBalance - (2 * myRound.betAmount)));
     }
 
+    /** @notice Check winner of the round, both vs House or vs other player.
+      * @param player1 player struct (with player's address and choice)
+      * @param player2 player struct (with player's address and choice)
+      * @return address of the winner
+     */
     function _checkWinner(Player player1, Player player2) private pure returns(address) {
         if ((uint(player1.choice) + 1) % 3 == uint(player2.choice)) {
             return player2.playerAddress;
@@ -262,12 +338,24 @@ contract RPS is Ownable {
         }
     }
 
+    /** @notice Set the lottery rate in percentage, how easy is to hit the jackpot
+      * @dev Mostly for testing porpuse. It should be removed in final deployment
+      * @param newLotteryRate new lottery rate
+     */
     // Mostly for testing porpuse.
     function setLotteryRate(uint newLotteryRate) public onlyOwner {
         lotteryRate = newLotteryRate;
     }
 
-    // Careful to call this function only when there is no round without result
+    /** @notice Play lottery for the round
+      * @dev TODO: Current randomness is not the best way for gambling since it can be attacked by miners.
+             TODO: It is needed to implement a mechanism that assures that existing rounds can be paid altoudh
+             someone has hit the jakpot. Curerntly if someone hits the jackpot he/she gets all value of the contract
+      * @param playerAddress address of the player
+      * @param _roundId id number that identify the round to resolve
+      * @return if player wins the lottery or not
+     */
+
     function _playLottery(address playerAddress, uint _roundId) private returns (bool) {
 
         if (uint(keccak256(abi.encodePacked(roundCount, playerAddress, blockhash(block.number - 1)))) % lotteryRate == 0) {
@@ -280,6 +368,9 @@ contract RPS is Ownable {
         return false;
     }
 
+    /** @notice Pay winner of the lottery
+      * @param _winnerAddress address of the winner
+     */
     function _payLotteryWinner(address _winnerAddress) private {
         require(jackpot <= address(this).balance, "Jackpot is higher than contract balance");
 
