@@ -24,10 +24,15 @@ contract RPS is Ownable {
 
     uint public lotteryRate = 1000;
 
+    // Since we can't use decimals, represent the rate as ppm (part-per-million)
+    // Used constant that saves gas, but it might be a good idea to set it as public
+    // and be able to adjust the fee rate.
+    uint constant jackpotFeeRate = 5000;
+    uint constant feeUnits = 1000000;
+
     /* Not used yet
     uint maxJackpot;
     uint businessFee;
-    uint jackpotFee;
     */
 
     enum Choice { Rock, Paper, Scissors }
@@ -267,7 +272,7 @@ contract RPS is Ownable {
         Round storage myRound = rounds[_roundId];  // Pointer to round
         require(!myRound.isClosed, "Round already closed");
         myRound.winner = _checkWinner(myRound.player1, myRound.player2);
-        _payWinner(_roundId);
+        _payRound(_roundId);
         emit RoundResolved(
             _roundId,
             myRound.winner,
@@ -282,7 +287,7 @@ contract RPS is Ownable {
     /** @notice Pay winner of the round resolved.
       * @param _roundId id number that identify the round to resolve
      */
-    function _payWinner(uint _roundId) private {
+    function _payRound(uint _roundId) private {
         Round storage myRound = rounds[_roundId];  // Pointer to round
         address winner = myRound.winner;
 
@@ -294,26 +299,31 @@ contract RPS is Ownable {
 
         uint inititalJackpot = jackpot;
         uint initialBalance = address(this).balance;
+        uint jackpotFee = myRound.betAmount.mul(jackpotFeeRate) / feeUnits;
 
         if(myRound.isSolo) {  // 1 player mode
-            if (winner == address(0)){  // Draw, player recevies what he bet
-                myRound.player1.playerAddress.transfer(myRound.betAmount);
+            if (winner == address(0)){  // Draw, player recevies what he bet minus fee
+                myRound.player1.playerAddress.transfer(myRound.betAmount - jackpotFee);
+                jackpot = jackpot.add(jackpotFee);
             } else if (winner == address(this)) {  // Player looses, bet to jackpot
                 jackpot = jackpot.add(myRound.betAmount);
             } else {  // Player wins
                 // SafeMath is not necessary, jackpot and betAmount are uint, and the substraction can only be uint.
                 // Used to show using a Library. Consider to change it to use -, since it saves same gas.
                 jackpot = jackpot.sub(myRound.betAmount);
-                winner.transfer(myRound.betAmount.mul(2));
-                emit Payment(winner, myRound.betAmount);
+                winner.transfer(myRound.betAmount.mul(2) - jackpotFee);
+                emit Payment(winner, myRound.betAmount - jackpotFee);
+                jackpot = jackpot.add(jackpotFee);
             }
         } else { // 2 players mode
-            if (winner == address(0)){  // Draw, players receive what they bet
-                myRound.player1.playerAddress.transfer(myRound.betAmount);
-                myRound.player2.playerAddress.transfer(myRound.betAmount);
-            } else {  // Bet to the winner
-                winner.transfer(myRound.betAmount.mul(2));
-                emit Payment(winner, myRound.betAmount);
+            if (winner == address(0)){  // Draw, players receive what they bet minus jackpot fee
+                myRound.player1.playerAddress.transfer(myRound.betAmount - jackpotFee);
+                myRound.player2.playerAddress.transfer(myRound.betAmount - jackpotFee);
+                jackpot = jackpot.add(2 * jackpotFee);
+            } else {  // Bet to the winner minus jackpot fee
+                winner.transfer(myRound.betAmount.mul(2) -jackpotFee);
+                emit Payment(winner, myRound.betAmount - jackpotFee);
+                jackpot = jackpot.add(jackpotFee);
             }
         }
 

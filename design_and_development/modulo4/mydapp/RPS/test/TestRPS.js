@@ -132,6 +132,11 @@ contract("RPS", async (accounts) => {
         let expectedPlayersBalance;
         let expectedContractsBalance;
 
+        // Percentage constant for fees. Copied from sol contract
+        const jackpotFeeRate = 0.005;
+        const jackpotFees = jackpotFeeRate * parseInt(betAmount);
+
+        // Disable lottery in order to calculate new balances without jackpot effect
         rps.stopLottery({from: owner});
 
         // Try several attemps to assure that passing the test is not because of a random gess.
@@ -155,14 +160,14 @@ contract("RPS", async (accounts) => {
             const fees =  parseInt(web3.toWei(0.05));  // Gas fees, adjust when we know better about gas cost
 
             if (winner == player1.address) {
-                expectedPlayersBalance = previousPlayersBalance + parseInt(betAmount);
-                expectedContractsBalance = previousContractsBalance - parseInt(betAmount);
+                expectedPlayersBalance = previousPlayersBalance + parseInt(betAmount) - jackpotFees;
+                expectedContractsBalance = previousContractsBalance - parseInt(betAmount) + jackpotFees;
             } else if (winner == RPS.address) {
                 expectedPlayersBalance = previousPlayersBalance -  parseInt(betAmount);
                 expectedContractsBalance = previousContractsBalance + parseInt(betAmount);
             } else {
-                expectedPlayersBalance = previousPlayersBalance;
-                expectedContractsBalance = previousContractsBalance;
+                expectedPlayersBalance = previousPlayersBalance - jackpotFees;
+                expectedContractsBalance = previousContractsBalance + jackpotFees;
             }
 
             assert.closeTo(newPlayersBalance, expectedPlayersBalance, fees, 'Player balance is wrong after round vs House');
@@ -193,11 +198,17 @@ contract("RPS", async (accounts) => {
         rps.stopLottery({from: owner});
         const betAmount = web3.toWei(0.1);
 
+        // Percentage constant for fees.
+        const jackpotFeeRate = 0.005;
+        const jackpotFees = jackpotFeeRate * parseInt(betAmount);
+
         // Try several attemps to assure that passing the test is not because of a random gess.
         // Maybe final version reduce the attemps to get lower unit test time.
         for (i of [...Array(3).keys()]) {
             const previousPlayer1sBalance = (await web3.eth.getBalance(player1.address)).toNumber();
             const previousPlayer2sBalance = (await web3.eth.getBalance(player2.address)).toNumber();
+            const previousContractsBalance = (await web3.eth.getBalance(rps.address)).toNumber();
+
             player2.choice = i % 3;  // to select different player choices
             rps.createRound(false, player1.choice, {from: player1.address, value: betAmount});
             let lastRound = await rps.roundCount();
@@ -212,20 +223,25 @@ contract("RPS", async (accounts) => {
             const newPlayer2sBalance = (await web3.eth.getBalance(player2.address)).toNumber();
             const fees =  parseInt(web3.toWei(0.05));  // Gas fees, adjust when we know better about gas cost
 
+            const newContractsBalance = (await web3.eth.getBalance(rps.address)).toNumber();
+
             if (winner == player1.address) {
-                expectedPlayer1sBalance = previousPlayer1sBalance + parseInt(betAmount);
+                expectedPlayer1sBalance = previousPlayer1sBalance + parseInt(betAmount) - jackpotFees;
                 expectedPlayer2sBalance = previousPlayer2sBalance - parseInt(betAmount);
+                expectedContractsBalance = previousContractsBalance + jackpotFees;
             } else if (winner == player2.address) {
                 expectedPlayer1sBalance = previousPlayer1sBalance - parseInt(betAmount);
-                expectedPlayer2sBalance = previousPlayer2sBalance + parseInt(betAmount);
-
+                expectedPlayer2sBalance = previousPlayer2sBalance + parseInt(betAmount) - jackpotFees;
+                expectedContractsBalance = previousContractsBalance + jackpotFees;
             } else {
-                expectedPlayer1sBalance = previousPlayer1sBalance;
-                expectedPlayer2sBalance = previousPlayer2sBalance;
+                expectedPlayer1sBalance = previousPlayer1sBalance - jackpotFees;
+                expectedPlayer2sBalance = previousPlayer2sBalance - jackpotFees;
+                expectedContractsBalance = previousContractsBalance + 2* jackpotFees;
             }
 
             assert.closeTo(newPlayer1sBalance, expectedPlayer1sBalance, fees, 'Player1 balance is wrong after round vs Player2');
             assert.closeTo(newPlayer2sBalance, expectedPlayer2sBalance, fees, 'Player2 balance is wrong after round vs Player2');
+            assert.equal(newContractsBalance, expectedContractsBalance, 'House balance is wrong after round vs House');
         }
 
         rps.startLottery({from: owner});
