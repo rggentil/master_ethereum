@@ -15,6 +15,16 @@ First of all, the owner of the contract, that is the creator if we haven't chang
 
 Please, take into account that for these two actions we have to do it through console (or Remix), since I haven't implemented them in the front-end.
 
+For instance, we can run following instructions from truffle console (if we have deployed the contract):
+
+```javascript
+fundGame = (account, ethers) => RPS.at(RPS.address).fundGame({ from: web3.eth.accounts[account], value: web3.toWei(ethers) })
+
+fundGame(0,5)
+
+RPS.at(RPS.address).startGame()
+```
+
 We can play RPS in two different ways:
 
 ### Playing vs House
@@ -56,7 +66,7 @@ Back-end is coded in Solidity, the most popular language for working with Ethere
 
 All functionality is managed in one file: [RPS.sol](contracts/RPS.sol).
 
-## Security
+## Security <a name="security"></a>
 
 We already know that security is one of the most important issues when dealing with smartcontracts, since any potential bug can turn into a lose of funds. Moreover, in a casino-style game, there are some assumptions about our solution that can become a real mess.
 
@@ -120,3 +130,33 @@ Here is the list of tests after executing *truffle test*:
 
   16 passing (17s)
 ```
+
+## RPS-P2P on Rinkeby
+
+RPS-P2P is a game not ready for productioh, so it is thought to be deployed in a local blockchain (just run `ganache-cli`) or also in a testnet like Rinkeby. The game has been deployed in Rinkeby with following contract address:
+
+```bash
+Crggentil@elcid:~/Documents/master_ethereum/design_and_development/modulo4/myda/RPS$ truffle migrate --network rinkeby
+Using network 'rinkeby'.
+
+Running migration: 1_initial_migration.js
+  Deploying Migrations...
+  ... 0xf20787b78e2d51f25aeb076ffab9f47b0249b664bfbe444820493ce06abc0c82
+  Migrations: 0x1415401bd692d86b56387dc7fe0f7eb9f231548b
+Saving successful migration to network...
+  ... 0x8dba9ff0dbeaafa2b689b815646303875c537970ea9492a4cb8203c456591d68
+Saving artifacts...
+Running migration: 2_deploy_contracts.js
+  Deploying RPS...
+  ... 0x64a85428b14016ab89231462255b6c3ca84d3e9fff7edaecb8a614602fc70216
+  RPS: 0x979a73188c6fb4668a218c53cf0101ca1f16be78
+Saving successful migration to network...
+  ... 0x9a1fce792416f217f25739b9c92f892db8b0264e7d86f9890b203a563d8f4231
+Saving artifacts...
+```
+
+## Known issues
+
+- There are some problems populating "Last Round" and "Opened round" tables when we manage rounds. It seems like several rows are added for the same round. Couriously this was something I got to solve for local chains but now it happens for Rinkeby. A simple workaround is to refresh the page.
+- There are several issues about security, see [Security](#security).
+- It is possible to lock opened rounds by betting and withdrawal all funds of the game, since we are managing only one jackpot that contains all the funds of the game.
